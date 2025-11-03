@@ -10,7 +10,11 @@ load_dotenv(BASE_DIR / ".env")
 # === Core ====================================================================
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret")
 DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+ALLOWED_HOSTS = os.getenv(
+    "ALLOWED_HOSTS",
+    ".onrender.com,localhost,127.0.0.1"
+).split(",")
+
 
 LANGUAGE_CODE = "es"
 TIME_ZONE = "America/Costa_Rica"
