@@ -9,4 +9,4 @@ whitenoise
 dj-database-url
 python-dotenv
 Django>=4.2,<6.0
-requests# update lunes,  3 de noviembre de 2025, 15:33:44 CST
+requests
