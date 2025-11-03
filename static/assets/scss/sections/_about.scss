@@ -1,0 +1,203 @@
+// main: ../main.scss
+/*--------------------------------------------------------------
+# About Section
+--------------------------------------------------------------*/
+.about {
+  padding-top: 120px;
+  padding-bottom: 60px;
+
+  .about-content {
+    h3 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      position: relative;
+
+      &:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -10px;
+        height: 3px;
+        width: 60px;
+        background-color: var(--accent-color);
+      }
+    }
+
+    p {
+      margin-bottom: 20px;
+      line-height: 1.8;
+
+      &.fst-italic {
+        font-size: 18px;
+        color: color-mix(in srgb, var(--heading-color), transparent 15%);
+      }
+    }
+
+    .chef-signature {
+      padding: 20px;
+      background-color: color-mix(in srgb, var(--background-color), var(--accent-color) 5%);
+      border-radius: 8px;
+
+      .chef-avatar {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border: 3px solid var(--accent-color);
+      }
+
+      .chef-message {
+        font-style: italic;
+        font-size: 15px;
+        color: var(--heading-color);
+      }
+
+      .signature-img {
+        max-height: 50px;
+        margin-bottom: 5px;
+      }
+
+      .chef-name {
+        margin: 0;
+        font-weight: 600;
+        font-size: 14px;
+        color: color-mix(in srgb, var(--heading-color), transparent 15%);
+      }
+    }
+  }
+
+  .about-image-wrapper {
+    position: relative;
+
+    .main-image {
+      border-radius: 10px;
+      position: relative;
+      z-index: 1;
+      border: 5px solid color-mix(in srgb, var(--default-color), transparent 80%);
+    }
+
+    .accent-image {
+      position: absolute;
+      width: 60%;
+      bottom: -15%;
+      right: -15%;
+      z-index: 2;
+      border-radius: 10px;
+      border: 5px solid color-mix(in srgb, var(--default-color), transparent 80%);
+
+      @media (max-width: 992px) {
+        display: none;
+      }
+    }
+
+    .establishment-year {
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      background-color: var(--accent-color);
+      color: var(--contrast-color);
+      padding: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 50%;
+      line-height: 1.1;
+      width: 90px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+      font-family: var(--heading-font);
+
+      @media (max-width: 768px) {
+        width: 70px;
+        height: 70px;
+        font-size: 16px;
+        top: -10px;
+        left: -10px;
+      }
+    }
+  }
+
+  .features-section {
+    border-top: 1px solid color-mix(in srgb, var(--heading-color), transparent 80%);
+
+    .feature-box {
+      text-align: center;
+      padding: 20px 15px;
+      height: 100%;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-10px);
+
+        .feature-icon {
+          background-color: var(--accent-color);
+          color: var(--contrast-color);
+        }
+      }
+
+      .feature-icon {
+        width: 70px;
+        height: 70px;
+        line-height: 70px;
+        background-color: color-mix(in srgb, var(--background-color), var(--accent-color) 15%);
+        color: var(--accent-color);
+        font-size: 28px;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      h4 {
+        font-size: 20px;
+        margin-bottom: 12px;
+      }
+
+      p {
+        font-size: 14px;
+        color: color-mix(in srgb, var(--default-color), transparent 15%);
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .stats-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    background-color: color-mix(in srgb, var(--background-color), var(--heading-color) 3%);
+    padding: 30px 20px;
+    border-radius: 10px;
+
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+
+      @media (max-width: 768px) {
+        width: 50%;
+        margin-bottom: 15px;
+      }
+
+      .stat-number {
+        font-size: 42px;
+        font-weight: 700;
+        color: var(--accent-color);
+        display: block;
+        font-family: var(--heading-font);
+        line-height: 1;
+      }
+
+      .stat-label {
+        margin-top: 5px;
+        margin-bottom: 0;
+        font-weight: 500;
+        font-size: 15px;
+        color: var(--heading-color);
+      }
+    }
+  }
+}

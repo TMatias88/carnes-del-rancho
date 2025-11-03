@@ -1,0 +1,187 @@
+// main: ../main.scss
+/*--------------------------------------------------------------
+# Chefs Section
+--------------------------------------------------------------*/
+.chefs {
+  .chef-highlight {
+    background-color: var(--surface-color);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .chef-image {
+      overflow: hidden;
+      margin-bottom: 0;
+
+      img {
+        transition: transform 0.6s;
+        width: 100%;
+        object-fit: cover;
+      }
+
+      &:hover img {
+        transform: scale(1.05);
+      }
+    }
+
+    .chef-details {
+      padding: 2.5rem;
+
+      h3 {
+        color: var(--accent-color);
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 0.5rem;
+      }
+
+      h2 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 1.25rem;
+      }
+
+      .chef-awards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+
+        span {
+          font-size: 0.9rem;
+          padding: 0.35rem 0.8rem;
+          border-radius: 50px;
+          background-color: color-mix(in srgb, var(--accent-color), transparent 85%);
+          display: inline-flex;
+          align-items: center;
+
+          i {
+            margin-right: 0.4rem;
+            color: var(--accent-color);
+          }
+        }
+      }
+
+      p {
+        margin-bottom: 1.5rem;
+        line-height: 1.7;
+      }
+
+      .chef-signature {
+        display: block;
+        max-width: 180px;
+        margin-top: 1.5rem;
+
+        img {
+          max-width: 100%;
+          height: auto;
+        }
+      }
+    }
+
+    @media (max-width: 991px) {
+      margin-bottom: 2.5rem;
+    }
+  }
+
+  .team-container {
+    padding-left: 1rem;
+
+    @media (max-width: 991px) {
+      padding-left: 0;
+    }
+  }
+
+  .chef-card {
+    background-color: var(--surface-color);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+    height: 100%;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+
+      .social-links {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    .chef-img {
+      position: relative;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        transition: transform 0.5s;
+      }
+
+      .social-links {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 1rem;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+
+        a {
+          width: 36px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: var(--surface-color);
+          color: var(--accent-color);
+          border-radius: 50%;
+          transition: background-color 0.3s, color 0.3s;
+
+          &:hover {
+            background-color: var(--accent-color);
+            color: var(--contrast-color);
+          }
+        }
+      }
+    }
+
+    .chef-info {
+      padding: 1.5rem;
+
+      h4 {
+        font-size: 1.25rem;
+        margin-bottom: 0.3rem;
+        font-weight: 600;
+      }
+
+      .role {
+        color: var(--accent-color);
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 1rem;
+        display: block;
+      }
+
+      .details {
+        margin-bottom: 0;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+    }
+  }
+}

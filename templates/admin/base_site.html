@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ block.super }}{% endblock %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <link rel="manifest" href="{% static 'manifest.webmanifest' %}">
+  <meta name="theme-color" content="#8B0000">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register("{% static 'sw.js' %}").catch(console.error);
+    }
+  </script>
+{% endblock %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'custom.css' %}?v=6">
+{% endblock %}
+
+
+
+
+{% block branding %}
+  <h1 id="site-name">
+    <a href="{% url 'admin:index' %}">
+      <img src="{% static 'assets/img/toro.png' %}" alt="Carnes del Rancho" style="height:28px;vertical-align:middle;margin-right:8px;">
+      Carnes Del Rancho
+    </a>
+  </h1>
+{% endblock %}

@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: carnes-del-rancho
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
+    startCommand: "gunicorn carnes_del_rancho.wsgi:application --preload"
+    envVars:
+      - key: DEBUG
+        value: False
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: "carnes-del-rancho.onrender.com,localhost,127.0.0.1"
+databases:
+  - name: carnes_db
+    plan: free

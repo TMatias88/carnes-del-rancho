@@ -1,0 +1,20 @@
+alias python="python3"
+
+
+export PATH="/usr/local/bin/python3:$PATH"
+
+
+export PATH="/usr/local/opt/openjdk/bin:$PATH"
+export PATH="/usr/local/opt/openjdk/bin:$PATH"
+export PATH="/usr/local/opt/ruby/bin:/usr/local/lib/ruby/gems/3.1.0/bin:$PATH"
+alias python="python3"
+
+export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/18/bin
+
+
+
+
+
+
+
+

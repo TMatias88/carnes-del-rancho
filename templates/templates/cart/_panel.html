@@ -1,0 +1,32 @@
+<div class="offcanvas-header">
+    <h5 class="offcanvas-title">Mi carrito</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column">
+    {% if items %}
+      <ul class="list-group mb-3">
+        {% for i in items %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-semibold">{{ i.product.name }}</div>
+              <div class="text-muted small">x {{ i.qty }}</div>
+            </div>
+            <div>₡ {{ i.total }}</div>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <strong>Total</strong>
+        <strong>₡ {{ summary.total_crc }}</strong>
+      </div>
+      <div class="d-grid gap-2">
+        <a href="{% url 'orders:checkout' %}" class="btn btn-primary">Ir al checkout</a>
+        <form action="{% url 'cart:cart_clear' %}" method="post">
+          {% csrf_token %}
+          <button class="btn btn-outline-secondary w-100" type="submit">Vaciar carrito</button>
+        </form>
+      </div>
+    {% else %}
+      <p class="text-muted">Tu carrito está vacío.</p>
+    {% endif %}
+  </div>

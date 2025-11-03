@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Checkout</h2>
+
+<div class="checkout">
+  <div class="checkout__summary card">
+    <h3>Resumen de tu pedido</h3>
+    <ul class="checkout__list">
+      {% for i in items %}
+        <li class="checkout__item">{{ i.qty }} x {{ i.product.name }} — ₡ {{ i.total }}</li>
+      {% endfor %}
+    </ul>
+    <p class="checkout__total"><strong>Total: ₡ {{ summary.total }}</strong></p>
+  </div>
+
+  <div class="checkout__form card">
+    <form action="{% url 'checkout_confirm' %}" method="post">
+      {% csrf_token %}
+      <h4>Datos del comprador</h4>
+
+      <div class="form-group">
+        <label for="email">Correo electrónico:</label>
+        <input type="email" name="email" id="email" required placeholder="tu_correo@ejemplo.com">
+      </div>
+
+      <p class="checkout__note">
+        <small>Si prefieres pagar por SINPE, adjunta un comprobante en la sección de contacto.
+        Para pagos con tarjeta, continúa con el botón “Pagar con BAC”.</small>
+      </p>
+
+      <button type="submit" class="btn btn-primary">💳 Pagar con BAC</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
