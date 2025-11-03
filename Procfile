@@ -1,0 +1,1 @@
+web: gunicorn carnes_del_rancho.wsgi:application --preload
