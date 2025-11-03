@@ -9,3 +9,4 @@ whitenoise
 dj-database-url
 python-dotenv
 Django>=4.2,<6.0
+requests
