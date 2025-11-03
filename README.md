@@ -53,3 +53,4 @@ Entra a http://127.0.0.1:8000/admin/ para crear **Categorías** y **Productos** 
 ## Notas
 - Este starter está listo para que pegues tu diseño (HTML/CSS/JS) en `templates` y `static`.
 - Para producción añade WhiteNoise o CDN para estáticos, y configura DEBUG=False y ALLOWED_HOSTS.
+# carnes-del-rancho
