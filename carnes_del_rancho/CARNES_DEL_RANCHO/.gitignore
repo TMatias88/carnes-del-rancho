@@ -1,18 +1,11 @@
-# Entorno / secretos
 .env
 *.env
 .venv/
 venv/
-
-# Python
 __pycache__/
 *.pyc
-
-# Django
 db.sqlite3
 media/
 staticfiles/
-
-# VSCode / macOS
 .vscode/
 .DS_Store

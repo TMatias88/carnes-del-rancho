@@ -1,1 +1,2 @@
-printf "web: gunicorn carnes_del_rancho.wsgi:application --preload\n" > Procfile
+web: gunicorn carnes_del_rancho.wsgi:application --preload
+

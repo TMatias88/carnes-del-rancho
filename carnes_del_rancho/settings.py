@@ -10,11 +10,21 @@ load_dotenv(BASE_DIR / ".env")
 # === Core ====================================================================
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret")
 DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
+
+# Incluyo ambos por si pruebas en Render y en DigitalOcean; agrega tu dominio propio luego.
 ALLOWED_HOSTS = os.getenv(
     "ALLOWED_HOSTS",
-    ".onrender.com,localhost,127.0.0.1"
+    ".ondigitalocean.app,.onrender.com,localhost,127.0.0.1"
 ).split(",")
 
+# Para formularios/CSRF detrás de HTTPS en DO/Render; agrega tu dominio propio cuando lo conectes.
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.ondigitalocean.app",
+    "https://*.onrender.com",
+]
+_extra_csrf = os.getenv("CSRF_TRUSTED_ORIGINS", "")
+if _extra_csrf.strip():
+    CSRF_TRUSTED_ORIGINS += [x.strip() for x in _extra_csrf.split(",") if x.strip()]
 
 LANGUAGE_CODE = "es"
 TIME_ZONE = "America/Costa_Rica"
@@ -40,7 +50,7 @@ INSTALLED_APPS = [
 # === Middleware ===============================================================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # 🔥 sirve estáticos en prod
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -72,8 +82,21 @@ TEMPLATES = [
 WSGI_APPLICATION = "carnes_del_rancho.wsgi.application"
 
 # === Database (PostgreSQL) ====================================================
-DATABASES = {
-    "default": {
+# Opción A (producción): usa DATABASE_URL (DigitalOcean/Render la proveen).
+# Opción B (dev/local): usa tus variables DB_* (las que ya tenías).
+DATABASES = {}
+_database_url = os.getenv("DATABASE_URL", "").strip()
+
+if _database_url:
+    # Producción: parsea la URL y exige SSL (recomendado en DO)
+    DATABASES["default"] = dj_database_url.config(
+        default=_database_url,
+        conn_max_age=600,
+        ssl_require=True,
+    )
+else:
+    # Desarrollo/local: tus credenciales actuales
+    DATABASES["default"] = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.getenv("DB_NAME", "carnes_rancho"),
         "USER": os.getenv("DB_USER", "CarnesDelRancho"),
@@ -81,7 +104,6 @@ DATABASES = {
         "HOST": os.getenv("DB_HOST", "127.0.0.1"),
         "PORT": os.getenv("DB_PORT", "5433"),
     }
-}
 
 # === Password Validation ======================================================
 AUTH_PASSWORD_VALIDATORS = [
@@ -95,15 +117,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # === Static & Media ===========================================================
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]  # mantiene tu carpeta 'static' en dev
+STATIC_ROOT = BASE_DIR / "staticfiles"    # carpeta de colecta para prod
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # === Email (SMTP real; cae a consola si faltan credenciales) ==================
-import os
-
 EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.mail.me.com")  # iCloud por defecto
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True").lower() == "true"
@@ -126,3 +146,21 @@ if EMAIL_HOST_PASSWORD:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# === Seguridad extra en producción ===========================================
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    # Protecciones recomendadas
+    SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", "0"))  # pon 31536000 cuando tengas dominio final y HTTPS estable
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = os.getenv("SECURE_HSTS_INCLUDE_SUBDOMAINS", "False").lower() == "true"
+    SECURE_HSTS_PRELOAD = os.getenv("SECURE_HSTS_PRELOAD", "False").lower() == "true"
+
+# === Logging básico (útil en DO) =============================================
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "root": {"handlers": ["console"], "level": os.getenv("LOG_LEVEL", "INFO")},
+}
