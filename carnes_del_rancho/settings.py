@@ -147,16 +147,21 @@ if EMAIL_HOST_PASSWORD:
 else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-# === Seguridad extra en producción ===========================================
+# === Seguridad extra en producción ===========================================# Configuración para producción
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-    # Protecciones recomendadas
-    SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", "0"))  # pon 31536000 cuando tengas dominio final y HTTPS estable
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = os.getenv("SECURE_HSTS_INCLUDE_SUBDOMAINS", "False").lower() == "true"
-    SECURE_HSTS_PRELOAD = os.getenv("SECURE_HSTS_PRELOAD", "False").lower() == "true"
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', 'nyc3')
+    AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL', 'https://nyc3.digitaloceanspaces.com')
+
+    AWS_QUERYSTRING_AUTH = False  # URLs públicas
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+
+    MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_REGION_NAME}.digitaloceanspaces.com/"
 
 # === Logging básico (útil en DO) =============================================
 LOGGING = {
