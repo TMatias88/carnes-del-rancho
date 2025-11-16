@@ -1,6 +1,7 @@
 from decimal import Decimal
 from catalog.models import Product
 
+
 CART_SESSION_ID = "cart"
 
 class CartService:
