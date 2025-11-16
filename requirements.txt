@@ -8,9 +8,6 @@ gunicorn
 whitenoise
 dj-database-url
 python-dotenv
-Django>=4.2,<6.0
 requests
-boto3==1.40.66
-django-storages==1.14.6
 boto3==1.40.66
 django-storages==1.14.6
