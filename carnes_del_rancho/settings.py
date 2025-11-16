@@ -128,7 +128,9 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # === DEBUG ===============================================================
-DEBUG = False
+if not DEBUG:
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
 
 # === Media (Local vs DigitalOcean Spaces) ================================
 MEDIA_URL = "https://carnes-del-rancho-media.nyc3.digitaloceanspaces.com/"
