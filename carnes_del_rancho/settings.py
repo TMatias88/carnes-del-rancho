@@ -11,15 +11,16 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret")
 DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
 
-ALLOWED_HOSTS = os.getenv(
-    "ALLOWED_HOSTS",
-    ".ondigitalocean.app,.onrender.com,localhost,127.0.0.1"
-).split(",")
+ALLOWED_HOSTS = [
+    "walrus-app-uvvxz.ondigitalocean.app",
+    "localhost",
+    "127.0.0.1"
+]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.ondigitalocean.app",
-    "https://*.onrender.com",
+    "https://walrus-app-uvvxz.ondigitalocean.app"
 ]
+
 _extra_csrf = os.getenv("CSRF_TRUSTED_ORIGINS", "")
 if _extra_csrf.strip():
     CSRF_TRUSTED_ORIGINS += [x.strip() for x in _extra_csrf.split(",") if x.strip()]
@@ -127,14 +128,13 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # === DEBUG ===============================================================
-DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+DEBUG = False
 
 # === Media (Local vs DigitalOcean Spaces) ================================
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 if not DEBUG:
-    # Production → Spaces
     AWS_ACCESS_KEY_ID = os.getenv("SPACES_KEY")
     AWS_SECRET_ACCESS_KEY = os.getenv("SPACES_SECRET")
     AWS_STORAGE_BUCKET_NAME = os.getenv("SPACES_BUCKET_NAME")
@@ -145,9 +145,7 @@ if not DEBUG:
 
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 else:
-    # Local
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
-
 
 
 # === Email ====================================================================
