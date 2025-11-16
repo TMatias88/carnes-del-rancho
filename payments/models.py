@@ -1,16 +1,26 @@
+# payments/models.py
 from django.db import models
 
+
 class Payment(models.Model):
-    order_number = models.CharField(max_length=32)  # o ForeignKey a tu Order si ya lo tenés
-    gateway = models.CharField(max_length=20)       # "placetopay" o "powertranz"
-    request_id = models.CharField(max_length=64, blank=True)
-    process_url = models.URLField(blank=True)
-    status = models.CharField(max_length=32, default="created")  # created/APPROVED/REJECTED/...
-    raw = models.JSONField(default=dict)
+    GATEWAY_CHOICES = [
+        ("placetopay", "PlaceToPay"),
+        ("otro", "Otro"),
+    ]
+
+    order_number = models.CharField(max_length=64, db_index=True)
+    gateway = models.CharField(max_length=32, choices=GATEWAY_CHOICES, default="placetopay")
+    request_id = models.CharField(max_length=64, blank=True, null=True)
+    process_url = models.URLField(blank=True, null=True)
+
+    status = models.CharField(max_length=64, default="created")
+    raw = models.JSONField(blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        indexes = [models.Index(fields=['order_number'])]
+        ordering = ["-created_at"]
 
     def __str__(self):
-        return f"{self.order_number} - {self.status}"
+        return f"{self.order_number} [{self.gateway}] {self.status}"

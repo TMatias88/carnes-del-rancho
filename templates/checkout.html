@@ -1,37 +1,53 @@
-{% extends "base.html" %}
-{% block content %}
 
-<h2>Checkout</h2>
+from urllib.parse import quote_plus
+from django.shortcuts import redirect   # asegúrate de tener este import
 
-<div class="checkout">
-  <div class="checkout__summary card">
-    <h3>Resumen de tu pedido</h3>
-    <ul class="checkout__list">
-      {% for i in items %}
-        <li class="checkout__item">{{ i.qty }} x {{ i.product.name }} — ₡ {{ i.total }}</li>
-      {% endfor %}
-    </ul>
-    <p class="checkout__total"><strong>Total: ₡ {{ summary.total }}</strong></p>
-  </div>
+def checkout(request):
+    """
+    En lugar de renderizar una página de pago,
+    arma un mensaje con el carrito y redirige a WhatsApp.
+    """
+    items = []
+    total = 0
 
-  <div class="checkout__form card">
-    <form action="{% url 'checkout_confirm' %}" method="post">
-      {% csrf_token %}
-      <h4>Datos del comprador</h4>
+    # Intento 1: si usas una clase Cart iterable (cart.cart.Cart)
+    try:
+        from cart.cart import Cart
+        cart = Cart(request)
+        for it in cart:
+            # intenta obtener nombre, cantidad y precio de forma segura
+            producto = it.get("product") or it.get("producto")
+            name = getattr(producto, "name", None) or it.get("name", "Producto")
+            qty = int(it.get("quantity") or it.get("qty") or 1)
+            price = float(it.get("price") or getattr(producto, "price", 0) or 0)
+            subtotal = qty * price
+            total += subtotal
+            items.append(f"- {qty} × {name} (₡{int(price):,})")
+    except Exception:
+        # Intento 2: si el carrito está en sesión como dict
+        cart_data = request.session.get("cart", {}) or request.session.get("CART", {})
+        for pid, info in cart_data.items():
+            name = info.get("name") or info.get("nombre") or f"Producto {pid}"
+            qty = int(info.get("quantity") or info.get("qty") or 1)
+            price = float(info.get("price") or info.get("precio") or 0)
+            subtotal = qty * price
+            total += subtotal
+            items.append(f"- {qty} × {name} (₡{int(price):,})")
 
-      <div class="form-group">
-        <label for="email">Correo electrónico:</label>
-        <input type="email" name="email" id="email" required placeholder="tu_correo@ejemplo.com">
-      </div>
+    if not items:
+        items.append("(Carrito vacío)")
 
-      <p class="checkout__note">
-        <small>Si prefieres pagar por SINPE, adjunta un comprobante en la sección de contacto.
-        Para pagos con tarjeta, continúa con el botón “Pagar con BAC”.</small>
-      </p>
+    # Mensaje a enviar por WhatsApp
+    lineas = [
+        "Hola, quiero hacer un pedido desde la web:",
+        *items,
+        f"Total estimado: ₡{int(total):,}",
+        "",
+        "¿Me ayudan a coordinar el pago y la entrega? 😊",
+    ]
+    texto = quote_plus("\n".join(lineas))
 
-      <button type="submit" class="btn btn-primary">💳 Pagar con BAC</button>
-    </form>
-  </div>
-</div>
+    # ✅ Número de la carnicería
+    wa_url = f"https://wa.me/50670381223?text={texto}"
 
-{% endblock %}
+    return redirect(wa_url)

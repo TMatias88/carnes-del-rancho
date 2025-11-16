@@ -1,98 +1,50 @@
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.db import transaction
-from django.urls import reverse
-from django.core.exceptions import ObjectDoesNotExist
-
-from catalog.models import Product
-from .models import Order, OrderItem
-from .forms import CheckoutForm
-
-def _get_cart_items_from_session(request):
-    """
-    Lee el carrito desde la sesión y arma:
-    - items: lista de dicts con producto, qty, price_crc, total
-    - total_crc: suma de todos
-    Estructura esperada en session:
-      cart = { "<product_id>": {"qty": int, "price_crc": int}, ... }
-    """
-    cart = request.session.get("cart", {}) or {}
-    items = []
-    total_crc = 0
-
-    for pid_str, data in cart.items():
-        try:
-            pid = int(pid_str)
-        except ValueError:
-            continue
-
-        qty = int(data.get("qty", 1))
-        price_crc = int(data.get("price_crc", 0))
-
-        try:
-            product = Product.objects.get(id=pid)
-        except ObjectDoesNotExist:
-            # Si el producto ya no existe, saltamos esta línea
-            continue
-
-        line_total = price_crc * qty
-        total_crc += line_total
-
-        items.append({
-            "product": product,
-            "qty": qty,
-            "price_crc": price_crc,
-            "total": line_total,
-        })
-
-    summary = {"total_crc": total_crc}
-    return items, summary
+from urllib.parse import quote_plus
+from django.shortcuts import redirect, render
+from cart.cart import CartService as Cart
 
 
 def checkout(request):
-    # Construye items/summary siempre (GET y POST) para que el template tenga datos
-    items, summary = _get_cart_items_from_session(request)
+    """
+    Lee el carrito real, arma el mensaje con nombre, cantidad y precio,
+    y redirige al WhatsApp de la carnicería.
+    """
+    cart = Cart(request)
+    items = []
+    total = 0
 
-    # Si no hay items en el carrito, no tiene sentido seguir
+    # Recorremos el carrito real del CartService
+    for item in cart:
+        product = item.get("product")
+        name = getattr(product, "name", "Producto sin nombre")
+        qty = int(item.get("qty") or 1)  # ← CORREGIDO
+        price = float(getattr(product, "price_crc", 0) or 0)  # ← CORREGIDO
+        subtotal = price * qty
+        total += subtotal
+        items.append(f"* {qty} × {name} — ₡{int(subtotal):,}")
+
+    # Si el carrito está vacío
     if not items:
-        messages.info(request, "Tu carrito está vacío. Agrega productos antes de continuar al checkout.")
-        return redirect("home")
+        items.append("(Carrito vacío)")
 
-    if request.method == "POST":
-        form = CheckoutForm(request.POST, request.FILES)
-        if form.is_valid():
-            with transaction.atomic():
-                order = form.save(commit=False)
-                order.total_crc = summary["total_crc"]
-                order.save()
+    # Construcción del mensaje de WhatsApp
+    lineas = [
+        "Hola, quiero hacer un pedido desde la web:",
+        *items,
+        f"Total estimado: ₡{int(total):,}",
+        "",
+        "¿Me ayudan a coordinar el pago y la entrega? ",
+    ]
+    texto = quote_plus("\n".join(lineas))
 
-                # Crear las líneas del pedido
-                for it in items:
-                    OrderItem.objects.create(
-                        order=order,
-                        product=it["product"],
-                        qty=it["qty"],
-                        price_crc=it["price_crc"],
-                        total_crc=it["total"],
-                    )
+    # Número real de WhatsApp de la carnicería
+    wa_url = f"https://wa.me/50670381223?text={texto}"
 
-                # Vaciar el carrito
-                request.session["cart"] = {}
-                request.session.modified = True
-
-            messages.success(request, "¡Pedido confirmado! Gracias por su compra.")
-            return redirect("orders:order_thanks")
-        else:
-            messages.error(request, "Por favor revisa los datos del formulario.")
-    else:
-        form = CheckoutForm()
-
-    return render(request, "checkout.html", {
-        "items": items,
-        "summary": summary,
-        "form": form,
-    })
+    return redirect(wa_url)
 
 
 def order_thanks(request):
-    return render(request, "order_thanks.html")
+    """
+    Vista que muestra la página de agradecimiento luego del pedido.
+    Debe existir la plantilla: templates/orders/thanks.html
+    """
+    return render(request, "orders/thanks.html")

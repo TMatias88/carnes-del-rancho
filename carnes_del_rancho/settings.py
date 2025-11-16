@@ -79,6 +79,18 @@ TEMPLATES = [
     },
 ]
 
+# ✅ Agrega esto justo DESPUÉS del bloque TEMPLATES (afuera, no dentro)
+TEMPLATES[0]["OPTIONS"].setdefault("builtins", [])
+TEMPLATES[0]["OPTIONS"].setdefault("libraries", {})
+
+# Hace disponible el filtro globalmente
+if "orders.templatetags.form_extras" not in TEMPLATES[0]["OPTIONS"]["builtins"]:
+    TEMPLATES[0]["OPTIONS"]["builtins"].append("orders.templatetags.form_extras")
+
+# Permite también usar {% load form_extras %}
+TEMPLATES[0]["OPTIONS"]["libraries"]["form_extras"] = "orders.templatetags.form_extras"
+
+
 WSGI_APPLICATION = "carnes_del_rancho.wsgi.application"
 
 # === Database (PostgreSQL) ====================================================
@@ -148,20 +160,14 @@ else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # === Seguridad extra en producción ===========================================# Configuración para producción
-if not DEBUG:
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# ======= FORZAR STORAGE LOCAL EN DEBUG (EVITAR S3/Spaces EN DESARROLLO) =======
+# Si estás desarrollando en tu Mac, queremos SIEMPRE FileSystemStorage.
+# Esto ignora DEFAULT_FILE_STORAGE que venga de variables de entorno o líneas anteriores.
+if DEBUG:
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+    MEDIA_URL = "/media/"
+    # MEDIA_ROOT ya estaba definido arriba como BASE_DIR / "media"
 
-    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
-    AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', 'nyc3')
-    AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL', 'https://nyc3.digitaloceanspaces.com')
-
-    AWS_QUERYSTRING_AUTH = False  # URLs públicas
-    AWS_DEFAULT_ACL = 'public-read'
-    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-
-    MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_REGION_NAME}.digitaloceanspaces.com/"
 
 # === Logging básico (útil en DO) =============================================
 LOGGING = {
@@ -171,4 +177,4 @@ LOGGING = {
     "root": {"handlers": ["console"], "level": os.getenv("LOG_LEVEL", "INFO")},
 }
 
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+#DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"

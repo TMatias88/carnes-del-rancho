@@ -39,7 +39,7 @@
   style="
     position: fixed;
     right: 35px;
-    bottom: 50px; /* súbelo o bájalo aquí: 120px, 200px, etc. */
+    bottom: 50px;
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -59,14 +59,11 @@
   <!-- Otros scripts de vendor -->
   <script src="{% static 'assets/js/main.js' %}"></script>
 
-
   <!-- Script para desaparecer los mensajes de alerta  -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const container = document.getElementById('flash-messages');
       if (!container) return;
-
-      // Auto-cerrar cada alerta a los 4s
       const alerts = container.querySelectorAll('.alert');
       alerts.forEach(function (el, idx) {
         setTimeout(function () {
@@ -78,12 +75,10 @@
             el.style.opacity = '0';
             setTimeout(() => el.remove(), 700);
           }
-        }, 4000 + (idx*200)); // pequeño retardo por si hay varias
+        }, 4000 + (idx*200));
       });
     });
-    </script>
-
-
+  </script>
 
 <body class="index-page">
 
@@ -101,27 +96,6 @@
         <li><a href="#hero" class="active">Inicio</a></li>
         <li><a href="#about">Sobre Nosotros</a></li>
         <li><a href="#menu">Catálogo de Productos</a></li>
-
-        <!-- OFERTAS DEL RANCHO SE IMPLEMENTARA MÁS ADELANTE
-        <li class="dropdown">
-          <a href="#"><span>Ofertas del Rancho</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-          <ul>
-            <li><a href="#">Promociones de la Semana</a></li>
-            <li class="dropdown">
-              <a href="#"><span>Combos y Especiales</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-              <ul>
-                <li><a href="#">Combos para Restaurantes</a></li>
-                <li><a href="#">Cortes Especiales</a></li>
-                <li><a href="#">Huevos de Granja</a></li>
-                <li><a href="#">Otros Productos</a></li>
-              </ul>
-            </li>
-            <li><a href="#">Eventos</a></li>
-            <li><a href="#">Temporada</a></li>
-          </ul>
-        </li>
-        -->
-
         <li><a href="#contact">Contacto</a></li>
       </ul>
       <i class="mobile-nav-toggle d-xl-none bi bi-list" aria-label="Abrir menú"></i>
@@ -130,7 +104,6 @@
     <a class="btn-getstarted d-none d-sm-block" href="#menu" aria-label="Ir al catálogo">Comprar</a>
   </div>
 </header>
-
 
   <!-- mensajes de Django, si los hay -->
   {% if messages %}
@@ -141,535 +114,505 @@
     </div>
   {% endif %}
 
-    <!-- ======= Hero ======= -->
-    <section id="hero" class="hero section">
-      <div class="container-fluid hero-container" data-aos="fade-up">
-        <div class="row g-0 align-items-center">
-          <div class="col-lg-6 content-col">
-            <div class="content-wrapper">
-              <h2>Frescura, Sabor y Calidad en Cada Corte</h2>
-              <p>
-                Carnes del Rancho ofrece carne fresca de res, cerdo y pollo, huevos de granja y productos locales sin químicos.
-                Criamos con cuidado, procesamos con higiene y entregamos con compromiso.
-              </p>
+  <!-- ======= Hero ======= -->
+  <section id="hero" class="hero section">
+    <div class="container-fluid hero-container" data-aos="fade-up">
+      <div class="row g-0 align-items-center">
+        <div class="col-lg-6 content-col">
+          <div class="content-wrapper">
+            <h2>Frescura, Sabor y Calidad en Cada Corte</h2>
+            <p>
+              Carnes del Rancho ofrece carne fresca de res, cerdo y pollo, huevos de granja y productos locales sin químicos.
+              Criamos con cuidado, procesamos con higiene y entregamos con compromiso.
+            </p>
 
-              <div class="opening-hours" data-aos="fade-up" data-aos-delay="500">
-                <i class="bi bi-clock"></i>
-                <span>Abierto: Lunes a Sábado, 7:00 am – 7:00 pm</span>
+            <div class="opening-hours" data-aos="fade-up" data-aos-delay="500">
+              <i class="bi bi-clock"></i>
+              <span>Abierto: Lunes a Sábado, 7:00 am – 7:00 pm</span>
+            </div>
+
+            <div class="btn-group">
+              <a href="#menu" class="btn btn-book" aria-label="Ir al catálogo">Comprar</a>
+              <a href="#menu" class="btn btn-menu">Ver Catálogo</a>
+            </div>
+
+            <div class="social-links">
+              <a href="https://www.facebook.com/carnesdelranchocq" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+              <a href="https://www.instagram.com/carnesdelranchocq/" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+              <a href="https://wa.me/70381223" target="_blank" rel="noopener" aria-label="WhatsApp">
+                <i class="bi bi-whatsapp"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 swiper-col">
+          <div class="swiper hero-swiper init-swiper" data-aos="zoom-out" data-aos-delay="100">
+            <script type="application/json" class="swiper-config">
+              {
+                "loop": true,
+                "speed": 800,
+                "autoplay": { "delay": 5000 },
+                "effect": "fade",
+                "slidesPerView": 1,
+                "navigation": { "nextEl": ".swiper-button-next", "prevEl": ".swiper-button-prev" }
+              }
+            </script>
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <div class="img-container">
+                  <img src="{% static 'assets/img/inicio/image/corte-1.jpg' %}" alt="Corte de carne premium">
+                </div>
               </div>
-
-              <div class="btn-group">
-                <a href="#menu" class="btn btn-book" aria-label="Ir al catálogo">Comprar</a>
-
-                <a href="#menu" class="btn btn-menu">Ver Catálogo</a>
+              <div class="swiper-slide">
+                <div class="img-container">
+                  <img src="{% static 'assets/img/inicio/image/corte-2.jpg' %}" alt="Carne marmoleada">
+                </div>
               </div>
+              <div class="swiper-slide">
+                <div class="img-container">
+                  <img src="{% static 'assets/img/inicio/image/corte-3.jpg' %}" alt="Cortes finos de carne">
+                </div>
+              </div>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+          </div>
+        </div>
 
-              <div class="social-links">
-                <a href="https://www.facebook.com/carnesdelranchocq" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-                <a href="https://www.instagram.com/carnesdelranchocq/" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-                <a href="https://wa.me/70381223" target="_blank" rel="noopener" aria-label="WhatsApp">
-                  <i class="bi bi-whatsapp"></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= Sobre Nosotros ======= -->
+  <section id="about" class="about section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row align-items-center gy-4">
+
+        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+          <div class="about-content">
+            <h3>Sobre Nosotros</h3>
+            <p class="fst-italic">
+              Carnes Del Rancho es el fruto del esfuerzo, la pasión y la visión de Jimmy Matías Jiménez,
+              un Ingeniero Industrial que ha trabajado incansablemente para construir su sueño desde cero en Ciudad
+              Quesada, San Carlos.
+            </p>
+
+            <div class="chef-signature mt-4">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <img src="{% static 'assets/img/inicio/image/sobreNosotros1.jpeg' %}"
+                      class="chef-avatar rounded-circle" alt="Jimmy Matías Jiménez">
+                </div>
+                <div class="col">
+                  <p class="chef-message mb-2">
+                    “A través del trabajo duro, la dedicación y el amor por lo que hacemos, entregamos calidad en
+                    cada corte y frescura en cada producto.”
+                  </p>
+                  <p class="chef-name">Jimmy Matías Jiménez, Fundador</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="300">
+          <div class="about-image-wrapper position-relative">
+            <img src="{% static 'assets/img/inicio/image/sobreNosotros1.jpeg' %}"
+                class="img-fluid main-image shadow" alt="Trabajo en carnicería"
+                style="height: 300px; object-fit: cover;">
+            <img src="{% static 'assets/img/inicio/image/sobreNosotros2.jpeg' %}"
+                class="img-fluid accent-image shadow" alt="Cortes y huevos"
+                style="height: 250px; object-fit: cover;">
+            <span class="establishment-year d-flex align-items-center justify-content-center text-center">
+              Desde el 2019
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-5 pt-4 features-section">
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="feature-box">
+            <div class="feature-icon">
+              <i class="bi bi-award"></i>
+            </div>
+            <h4>Calidad Reconocida</h4>
+            <p>Nos esforzamos cada día para ser la mejor carnicería de la Zona Norte, ofreciendo productos frescos y
+              de alta calidad.</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+          <div class="feature-box">
+            <div class="feature-icon">
+              <i class="bi bi-egg-fried"></i>
+            </div>
+            <h4>Productos Frescos</h4>
+            <p>Ofrecemos carne de res, cerdo y huevos frescos del rancho, criados y procesados con cuidado y
+              compromiso.</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+          <div class="feature-box">
+            <div class="feature-icon">
+              <i class="bi bi-people"></i>
+            </div>
+            <h4>Atención Personalizada</h4>
+            <p>Jimmy y su equipo están comprometidos con la atención al cliente, garantizando la mejor experiencia
+              de compra.</p>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="500">
+          <div class="feature-box">
+            <div class="feature-icon">
+              <i class="bi bi-heart"></i>
+            </div>
+            <h4>Pasión y Dedicación</h4>
+            <p>Cada producto es el resultado de un trabajo hecho con amor, desde la finca hasta tu mesa.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>  <!-- ✅ cerramos la sección about -->
+
+  <!-- ======= Catálogo (DINÁMICO + Isotope) ======= -->
+  <section id="catalogo" class="menu section">
+
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Catálogo de Productos</h2>
+      <p>Descubre la mejor selección de carnes frescas y productos de calidad.</p>
+    </div>
+
+    <div class="container" data-aos="fade-up">
+
+      <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+
+        <!-- Filtros -->
+        <div class="menu-filters isotope-filters mb-5">
+          <ul>
+            <li data-filter="*" class="filter-active">Todos</li>
+            {% if categories %}
+              {% for c in categories %}
+                <li data-filter=".filter-{{ c.slug }}">{{ c.name }}</li>
+              {% endfor %}
+            {% endif %}
+          </ul>
+        </div>
+
+        <!-- Catálogo de Productos -->
+        <section id="menu" class="menu section">
+          <div class="container" data-aos="fade-up">
+            <div class="isotope-layout"
+                 data-default-filter="*"
+                 data-layout="fitRows"
+                 data-sort="original-order">
+
+              <div class="menu-container isotope-container row gy-4">
+                {% if products %}
+                  {% for p in products %}
+                    <div class="col-12 col-md-6 isotope-item filter-{{ p.category.slug }}">
+                      <div class="menu-item d-flex align-items-center gap-4">
+
+                        {% if p.image and p.image.name %}
+                          <!-- ⚙️ Evitamos p.image.url para no disparar storage -->
+                          <img src="/media/{{ p.image.name }}" alt="{{ p.name }}" class="menu-img img-fluid rounded-3">
+                        {% else %}
+                          <img src="{% static 'assets/img/placeholder.jpg' %}" alt="{{ p.name }}" class="menu-img img-fluid rounded-3">
+                        {% endif %}
+
+                        <div class="menu-content">
+                          <h5 class="mb-1">{{ p.name }}</h5>
+                          {% if p.description %}
+                            <p class="ingredients mb-2 small">{{ p.description }}</p>
+                          {% endif %}
+
+                          <div class="d-flex justify-content-between align-items-center">
+                            {% if p.price_crc %}
+                              <span class="price">₡{{ p.price_crc }}</span>
+                            {% elif p.price %}
+                              <span class="price">₡{{ p.price }}</span>
+                            {% endif %}
+
+                            <form action="{% url 'cart:cart_add' p.id %}" method="post" class="d-inline js-cart-add">
+                              {% csrf_token %}
+                              <input type="hidden" name="qty" value="1">
+                              <button type="submit" class="btn btn-sm btn-brand">
+                                <i class="bi bi-cart-fill me-1"></i> Agregar al carrito
+                              </button>
+                            </form>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  <div class="col-12 text-center">
+                    <p class="text-muted mb-0">No hay productos disponibles por ahora.</p>
+                  </div>
+                {% endif %}
+              </div><!-- /.isotope-container -->
+
+              <!-- BOTÓN DE DESCARGA DE LISTA DE PRECIOS -->
+              <div class="text-center mt-4 mb-2" id="download-prices">
+                <a href="{% static 'assets/docs/lista-precios.pdf' %}"
+                   class="btn btn-brand btn-lg px-4"
+                   download="lista-precios-carnes-del-rancho.pdf">
+                  <i class="bi bi-file-earmark-pdf-fill me-2"></i>
+                  Descargar lista de precios
                 </a>
               </div>
-            </div>
-          </div>
+              <!-- /FIN BOTÓN DE DESCARGA -->
 
-          <div class="col-lg-6 swiper-col">
-            <div class="swiper hero-swiper init-swiper" data-aos="zoom-out" data-aos-delay="100">
-              <script type="application/json" class="swiper-config">
-                {
-                  "loop": true,
-                  "speed": 800,
-                  "autoplay": { "delay": 5000 },
-                  "effect": "fade",
-                  "slidesPerView": 1,
-                  "navigation": { "nextEl": ".swiper-button-next", "prevEl": ".swiper-button-prev" }
-                }
-              </script>
-              <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                  <div class="img-container">
-                    <img src="{% static 'assets/img/inicio/image/corte-1.jpg' %}" alt="Corte de carne premium">
-
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="img-container">
-                    <img src="{% static 'assets/img/inicio/image/corte-2.jpg' %}" alt="Carne marmoleada">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="img-container">
-                    <img src="{% static 'assets/img/inicio/image/corte-3.jpg' %}" alt="Cortes finos de carne">
-                  </div>
-                </div>
-              </div>
-              <div class="swiper-button-next"></div>
-              <div class="swiper-button-prev"></div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-
-
-    <!-- ======= Sobre Nosotros ======= -->
-    <section id="about" class="about section">
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="row align-items-center gy-4">
-
-          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-            <div class="about-content">
-              <h3>Sobre Nosotros</h3>
-              <p class="fst-italic">
-                Carnes Del Rancho es el fruto del esfuerzo, la pasión y la visión de Jimmy Matías Jiménez,
-                un Ingeniero Industrial que ha trabajado incansablemente para construir su sueño desde cero en Ciudad
-                Quesada, San Carlos.
-              </p>
-
-              <div class="chef-signature mt-4">
-                <div class="row align-items-center">
-                  <div class="col-auto">
-                    <img src="{% static 'assets/img/inicio/image/sobreNosotros1.jpeg' %}"
-                        class="chef-avatar rounded-circle" alt="Jimmy Matías Jiménez">
-                  </div>
-                  <div class="col">
-                    <p class="chef-message mb-2">
-                      “A través del trabajo duro, la dedicación y el amor por lo que hacemos, entregamos calidad en
-                      cada corte y frescura en cada producto.”
-                    </p>
-                    <p class="chef-name">Jimmy Matías Jiménez, Fundador</p>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="300">
-            <div class="about-image-wrapper position-relative">
-              <img src="{% static 'assets/img/inicio/image/sobreNosotros1.jpeg' %}"
-                  class="img-fluid main-image shadow" alt="Trabajo en carnicería"
-                  style="height: 300px; object-fit: cover;">
-              <img src="{% static 'assets/img/inicio/image/sobreNosotros2.jpeg' %}"
-                  class="img-fluid accent-image shadow" alt="Cortes y huevos"
-                  style="height: 250px; object-fit: cover;">
-              <span class="establishment-year d-flex align-items-center justify-content-center text-center">
-                Desde el 2019
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mt-5 pt-4 features-section">
-          <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-            <div class="feature-box">
-              <div class="feature-icon">
-                <i class="bi bi-award"></i>
-              </div>
-              <h4>Calidad Reconocida</h4>
-              <p>Nos esforzamos cada día para ser la mejor carnicería de la Zona Norte, ofreciendo productos frescos y
-                de alta calidad.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
-            <div class="feature-box">
-              <div class="feature-icon">
-                <i class="bi bi-egg-fried"></i>
-              </div>
-              <h4>Productos Frescos</h4>
-              <p>Ofrecemos carne de res, cerdo y huevos frescos del rancho, criados y procesados con cuidado y
-                compromiso.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
-            <div class="feature-box">
-              <div class="feature-icon">
-                <i class="bi bi-people"></i>
-              </div>
-              <h4>Atención Personalizada</h4>
-              <p>Jimmy y su equipo están comprometidos con la atención al cliente, garantizando la mejor experiencia
-                de compra.</p>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="500">
-            <div class="feature-box">
-              <div class="feature-icon">
-                <i class="bi bi-heart"></i>
-              </div>
-              <h4>Pasión y Dedicación</h4>
-              <p>Cada producto es el resultado de un trabajo hecho con amor, desde la finca hasta tu mesa.</p>
-            </div>
-          </div>
-        </div>
-
-
-    <!-- ======= Catálogo (DINÁMICO + Isotope) ======= -->
-    <section id="catalogo" class="menu section">
-
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Catálogo de Productos</h2>
-        <p>Descubre la mejor selección de carnes frescas y productos de calidad.</p>
-      </div>
-
-      <div class="container" data-aos="fade-up">
-
-        <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
-
-          <!-- Filtros -->
-          <div class="menu-filters isotope-filters mb-5">
-            <ul>
-              <li data-filter="*" class="filter-active">Todos</li>
-              {% if categories %}
-                {% for c in categories %}
-                  <li data-filter=".filter-{{ c.slug }}">{{ c.name }}</li>
-                {% endfor %}
-              {% else %}
-                <!-- Si no hay categorías, dejamos solo el "Todos" -->
-              {% endif %}
-            </ul>
-          </div>
-
-
-<!-- Catálogo de Productos -->
-<section id="menu" class="menu section">
-
-  <div class="container" data-aos="fade-up">
-    <!-- Configuración de Isotope -->
-    <div class="isotope-layout"
-         data-default-filter="*"
-         data-layout="fitRows"
-         data-sort="original-order">
-
-        <!-- Contenedor de ítems -->
-        <div class="menu-container isotope-container row gy-4">
-          {% if products %}
-            {% for p in products %}
-              <div class="col-12 col-md-6 isotope-item filter-{{ p.category.slug }}">
-                <div class="menu-item d-flex align-items-center gap-4">
-
-                  {% if p.image %}
-                    <img src="{{ p.image.url }}" alt="{{ p.name }}" class="menu-img img-fluid rounded-3">
-                  {% else %}
-                    <img src="{% static 'assets/img/placeholder.jpg' %}" alt="{{ p.name }}" class="menu-img img-fluid rounded-3">
-                  {% endif %}
-
-                  <div class="menu-content">
-                    <h5 class="mb-1">{{ p.name }}</h5>
-                    {% if p.description %}
-                    <p class="ingredients mb-2 small">{{ p.description }}</p>
-                    {% endif %}
-
-                    <div class="d-flex justify-content-between align-items-center">
-                      {% if p.price_crc %}
-                        <span class="price">₡{{ p.price_crc }}</span>
-                      {% elif p.price %}
-                        <span class="price">₡{{ p.price }}</span>
-                      {% endif %}
-
-                      <form action="{% url 'cart:cart_add' p.id %}" method="post" class="d-inline js-cart-add">
-                        {% csrf_token %}
-                        <input type="hidden" name="qty" value="1">
-                        <button type="submit" class="btn btn-sm btn-brand">
-                          <i class="bi bi-cart-fill me-1"></i> Agregar al carrito
-                        </button>
-                      </form>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            {% endfor %}
-          {% else %}
-            <div class="col-12 text-center">
-              <p class="text-muted mb-0">No hay productos disponibles por ahora.</p>
-            </div>
-          {% endif %}
-        </div><!-- /.isotope-container -->
-
-        <!-- BOTÓN DE DESCARGA DE LISTA DE PRECIOS -->
-        <div class="text-center mt-4 mb-2" id="download-prices">
-          <a href="{% static 'assets/docs/lista-precios.pdf' %}"
-             class="btn btn-brand btn-lg px-4"
-             download="lista-precios-carnes-del-rancho.pdf">
-            <i class="bi bi-file-earmark-pdf-fill me-2"></i>
-            Descargar lista de precios
-          </a>
-        </div>
-        <!-- /FIN BOTÓN DE DESCARGA -->
+            </div><!-- /.isotope-layout -->
+          </div><!-- /.container -->
+        </section>
+        <!-- /Catálogo de Productos -->
 
       </div><!-- /.isotope-layout -->
 
     </div><!-- /.container -->
-</section>
+  </section>
 
+  <!-- ======= Testimonios de clientes ======= -->
+  <section id="testimonials" class="testimonials section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Recomendado por quienes compran</h2>
+      <p> La mejor de la Zona Norte en sabor, frescura y atención.</p>
+    </div>
 
-
-    <!-- ======= Testimonios de clientes ======= -->
-<section id="testimonials" class="testimonials section">
-  <div class="container section-title" data-aos="fade-up">
-    <h2>Recomendado por quienes compran</h2>
-    <p> La mejor de la Zona Norte en sabor, frescura y atención.</p>
-  </div>
-
-
-  <div class="container" data-aos="fade-up" data-aos-delay="100">
-    <div class="swiper init-swiper">
-      <script type="application/json" class="swiper-config">
-        {
-          "loop": true,
-          "speed": 600,
-          "autoplay": { "delay": 5000 },
-          "slidesPerView": "auto",
-          "pagination": { "el": ".swiper-pagination", "type": "bullets", "clickable": true },
-          "breakpoints": {
-            "320": { "slidesPerView": 1, "spaceBetween": 24 },
-            "1200": { "slidesPerView": 3, "spaceBetween": 24 }
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="swiper init-swiper">
+        <script type="application/json" class="swiper-config">
+          {
+            "loop": true,
+            "speed": 600,
+            "autoplay": { "delay": 5000 },
+            "slidesPerView": "auto",
+            "pagination": { "el": ".swiper-pagination", "type": "bullets", "clickable": true },
+            "breakpoints": {
+              "320": { "slidesPerView": 1, "spaceBetween": 24 },
+              "1200": { "slidesPerView": 3, "spaceBetween": 24 }
+            }
           }
-        }
-      </script>
+        </script>
 
-      <div class="swiper-wrapper">
-
-        <div class="swiper-slide">
-          <div class="testimonial-item h-100 d-flex flex-column">
-            <div class="stars mb-2" aria-label="5 de 5 estrellas">
-              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-            </div>
-            <p class="flex-grow-1">Excelente calidad y servicio. 100% recomendados.</p>
-            <div class="profile mt-auto d-flex align-items-center gap-3">
-              <img src="{% static 'assets/img/person/person-m-9.webp' %}" class="testimonial-img" alt="Foto de Carlos M.">
-              <div>
-                <h3 class="mb-0">Carlos M.</h3>
-                <h4 class="text-muted small">Cliente</h4>
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <div class="testimonial-item h-100 d-flex flex-column">
+              <div class="stars mb-2" aria-label="5 de 5 estrellas">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <p class="flex-grow-1">Excelente calidad y servicio. 100% recomendados.</p>
+              <div class="profile mt-auto d-flex align-items-center gap-3">
+                <img src="{% static 'assets/img/person/person-m-9.webp' %}" class="testimonial-img" alt="Foto de Carlos M.">
+                <div>
+                  <h3 class="mb-0">Carlos M.</h3>
+                  <h4 class="text-muted small">Cliente</h4>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="swiper-slide">
-          <div class="testimonial-item h-100 d-flex flex-column">
-            <div class="stars mb-2" aria-label="5 de 5 estrellas">
-              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-            </div>
-            <p class="flex-grow-1">Los mejores cortes de la zona. Atención de primera.</p>
-            <div class="profile mt-auto d-flex align-items-center gap-3">
-              <img src="{% static 'assets/img/person/person-f-5.webp' %}" class="testimonial-img" alt="Foto de Sofía W.">
-              <div>
-                <h3 class="mb-0">Sofía W.</h3>
-                <h4 class="text-muted small">Cliente</h4>
+          <div class="swiper-slide">
+            <div class="testimonial-item h-100 d-flex flex-column">
+              <div class="stars mb-2" aria-label="5 de 5 estrellas">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <p class="flex-grow-1">Los mejores cortes de la zona. Atención de primera.</p>
+              <div class="profile mt-auto d-flex align-items-center gap-3">
+                <img src="{% static 'assets/img/person/person-f-5.webp' %}" class="testimonial-img" alt="Foto de Sofía W.">
+                <div>
+                  <h3 class="mb-0">Sofía W.</h3>
+                  <h4 class="text-muted small">Cliente</h4>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="swiper-slide">
-          <div class="testimonial-item h-100 d-flex flex-column">
-            <div class="stars mb-2" aria-label="5 de 5 estrellas">
-              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-            </div>
-            <p class="flex-grow-1">Frescura y sabor, se nota el cuidado en cada producto.</p>
-            <div class="profile mt-auto d-flex align-items-center gap-3">
-              <img src="{% static 'assets/img/person/person-f-12.webp' %}" class="testimonial-img" alt="Foto de Andrea K.">
-              <div>
-                <h3 class="mb-0">Andrea K.</h3>
-                <h4 class="text-muted small">Cliente</h4>
+          <div class="swiper-slide">
+            <div class="testimonial-item h-100 d-flex flex-column">
+              <div class="stars mb-2" aria-label="5 de 5 estrellas">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <p class="flex-grow-1">Frescura y sabor, se nota el cuidado en cada producto.</p>
+              <div class="profile mt-auto d-flex align-items-center gap-3">
+                <img src="{% static 'assets/img/person/person-f-12.webp' %}" class="testimonial-img" alt="Foto de Andrea K.">
+                <div>
+                  <h3 class="mb-0">Andrea K.</h3>
+                  <h4 class="text-muted small">Cliente</h4>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-      </div><!-- /.swiper-wrapper -->
+        </div><!-- /.swiper-wrapper -->
 
-      <div class="swiper-pagination"></div>
-    </div><!-- /.swiper -->
-  </div><!-- /.container -->
-</section>
+        <div class="swiper-pagination"></div>
+      </div><!-- /.swiper -->
+    </div><!-- /.container -->
+  </section>
 
-<section id="contact" class="contact section">
+  <section id="contact" class="contact section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Contáctenos</h2>
+      <p>Le atenderemos con gusto y la atención personalizada que nos caracteriza.</p>
+    </div>
 
-  <!-- Sección de título -->
-  <div class="container section-title" data-aos="fade-up">
-    <h2>Contáctenos</h2>
-    <p>Le atenderemos con gusto y la atención personalizada que nos caracteriza.</p>
-  </div>
-
-  <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-    <!-- Cajas de contacto -->
-    <div class="row gy-4 mb-5">
-
-      <!-- Dirección -->
-      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
-        <div class="contact-info-box">
-          <div class="icon-box"><i class="bi bi-geo-alt"></i></div>
-          <div class="info-content">
-            <h4>Dirección</h4>
-            <p>Barrio El Campo, Ciudad Quesada.</p>
-            <a href="https://www.google.com/maps/place/Carnes+del+Rancho" target="_blank" rel="noopener">Ver en Google Maps</a>
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row gy-4 mb-5">
+        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="contact-info-box">
+            <div class="icon-box"><i class="bi bi-geo-alt"></i></div>
+            <div class="info-content">
+              <h4>Dirección</h4>
+              <p>Barrio El Campo, Ciudad Quesada.</p>
+              <a href="https://www.google.com/maps/place/Carnes+del+Rancho" target="_blank" rel="noopener">Ver en Google Maps</a>
+            </div>
           </div>
         </div>
+
+        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="150">
+          <div class="contact-info-box d-flex">
+            <div class="icon-box me-3"><i class="bi bi-envelope" aria-hidden="true"></i></div>
+            <div class="info-content">
+              <h4 class="mb-1">Correo</h4>
+              <p class="mb-1">
+                <a href="mailto:carnesdelrancho@gmail.com" class="text-decoration-none">
+                  carnesdelrancho@gmail.com
+                </a>
+              </p>
+              <p class="small-text mb-0">Responde rápido en horario laboral.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="contact-info-box d-flex">
+            <div class="icon-box me-3"><i class="bi bi-telephone"></i></div>
+            <div class="info-content">
+              <h4 class="mb-1">Pedidos y contacto</h4>
+              <p class="mb-1">
+                Teléfono / WhatsApp:
+                <a href="https://wa.me/50687448168" target="_blank" rel="noopener">70381223</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+    <div class="map-section" data-aos="fade-up" data-aos-delay="200">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3925.004514695776!2d-84.43050528849265!3d10.341523167020517!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8fa065b2e42b8503%3A0x3d792355cf0c701e!2sCarnes%20del%20Rancho!5e0!3m2!1ses!2scr!4v1759871791461!5m2!1ses!2scr"
+        width="100%" height="500" style="border:0;" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+
+    {% if messages %}
+      <div id="flash-messages" class="container mt-3">
+        {% for m in messages %}
+          <div class="alert alert-brand alert-dismissible fade show shadow-sm mb-2" role="alert" aria-live="polite">
+            {{ m }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+          </div>
+        {% endfor %}
       </div>
+    {% endif %}
 
-      <!-- Correo -->
-      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="150">
-        <div class="contact-info-box d-flex">
-          <div class="icon-box me-3"><i class="bi bi-envelope" aria-hidden="true"></i></div>
-          <div class="info-content">
-            <h4 class="mb-1">Correo</h4>
-            <p class="mb-1">
-              <a href="mailto:carnesdelrancho@gmail.com" class="text-decoration-none">
-                carnesdelrancho@gmail.com
-              </a>
+    <div class="container form-container-overlap">
+      <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="300">
+        <div class="col-lg-10">
+          <div class="contact-form-wrapper">
+            <h2 class="text-center mb-4">Contáctenos</h2>
+            <p class="text-center mb-5">
+              Si desea realizar un pedido, consulta o solicitar información sobre nuestros productos,
+              complete el siguiente formulario y con gusto le atenderemos.
             </p>
-            <p class="small-text mb-0">Responde rápido en horario laboral.</p>
+
+            <form action="{% url 'contact_submit' %}" method="post" class="contact-form needs-validation" novalidate>
+              {% csrf_token %}
+              <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+
+              <div class="row gy-3">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <div class="input-with-icon">
+                      <i class="bi bi-person"></i>
+                      <input type="text" class="form-control" name="nombre" placeholder="Nombre completo" required>
+                    </div>
+                    <div class="invalid-feedback">Ingrese su nombre.</div>
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <div class="input-with-icon">
+                      <i class="bi bi-telephone"></i>
+                      <input type="text" class="form-control" name="telefono" placeholder="Número de teléfono" required>
+                    </div>
+                    <div class="invalid-feedback">Ingrese un teléfono.</div>
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <div class="input-with-icon">
+                      <i class="bi bi-envelope"></i>
+                      <input type="email" class="form-control" name="email" placeholder="Correo electrónico" required>
+                    </div>
+                    <div class="invalid-feedback">Ingrese un correo válido.</div>
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <div class="input-with-icon textarea">
+                      <i class="bi bi-chat-text"></i>
+                      <input type="text" class="form-control" name="mensaje" placeholder="Asunto (Pedido, consulta…)" required>
+                    </div>
+                    <div class="invalid-feedback">Ingrese su mensaje.</div>
+                  </div>
+                </div>
+
+                <div class="col-12 text-center">
+                  <button type="submit" class="btn btn-primary btn-submit">Enviar Mensaje</button>
+                </div>
+              </div>
+            </form>
+            <!-- /form -->
           </div>
         </div>
-      </div>
-
-      <!-- Teléfono / WhatsApp -->
-      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-        <div class="contact-info-box d-flex">
-          <div class="icon-box me-3"><i class="bi bi-telephone"></i></div>
-          <div class="info-content">
-            <h4 class="mb-1">Pedidos y contacto</h4>
-            <p class="mb-1">
-              Teléfono / WhatsApp:
-              <a href="https://wa.me/50687448168" target="_blank" rel="noopener">70381223</a>
-            </p>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /.row -->
-
-  </div><!-- /.container -->
-
-  <!-- Google Maps (Full Width) -->
-  <div class="map-section" data-aos="fade-up" data-aos-delay="200">
-    <iframe
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3925.004514695776!2d-84.43050528849265!3d10.341523167020517!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8fa065b2e42b8503%3A0x3d792355cf0c701e!2sCarnes%20del%20Rancho!5e0!3m2!1ses!2scr!4v1759871791461!5m2!1ses!2scr"
-      width="100%" height="500" style="border:0;" allowfullscreen="" loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade"></iframe>
-  </div>
-
-  <!-- Mensajes flash de Django despues de enviar correo -->
-  {% if messages %}
-  <div id="flash-messages" class="container mt-3">
-    {% for m in messages %}
-      <div class="alert alert-brand alert-dismissible fade show shadow-sm mb-2" role="alert" aria-live="polite">
-        {{ m }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-      </div>
-    {% endfor %}
-  </div>
-{% endif %}
-
-
-
-<!-- Formulario (idéntico al del index) -->
-<div class="container form-container-overlap">
-  <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="300">
-    <div class="col-lg-10">
-      <div class="contact-form-wrapper">
-        <h2 class="text-center mb-4">Contáctenos</h2>
-        <p class="text-center mb-5">
-          Si desea realizar un pedido, consulta o solicitar información sobre nuestros productos,
-          complete el siguiente formulario y con gusto le atenderemos.
-        </p>
-
-        <!-- IMPORTANTE: todos los campos dentro del <form> -->
-        <form action="{% url 'contact_submit' %}" method="post" class="contact-form needs-validation" novalidate>
-          {% csrf_token %}
-          <!-- Honeypot anti-spam -->
-          <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
-
-          <div class="row gy-3">
-
-            <!-- Nombre -->
-            <div class="col-md-12">
-              <div class="form-group">
-                <div class="input-with-icon">
-                  <i class="bi bi-person"></i>
-                  <input type="text" class="form-control" name="nombre" placeholder="Nombre completo" required>
-                </div>
-                <div class="invalid-feedback">Ingrese su nombre.</div>
-              </div>
-            </div>
-
-            <!-- Teléfono -->
-            <div class="col-md-12">
-              <div class="form-group">
-                <div class="input-with-icon">
-                  <i class="bi bi-telephone"></i>
-                  <input type="text" class="form-control" name="telefono" placeholder="Número de teléfono" required>
-                </div>
-                <div class="invalid-feedback">Ingrese un teléfono.</div>
-              </div>
-            </div>
-
-            <!-- Correo -->
-            <div class="col-md-12">
-              <div class="form-group">
-                <div class="input-with-icon">
-                  <i class="bi bi-envelope"></i>
-                  <input type="email" class="form-control" name="email" placeholder="Correo electrónico" required>
-                </div>
-                <div class="invalid-feedback">Ingrese un correo válido.</div>
-              </div>
-            </div>
-
-            <!-- Mensaje -->
-            <div class="col-md-12">
-              <div class="form-group">
-                <div class="input-with-icon textarea">
-                  <i class="bi bi-chat-text"></i>
-                  <input type="text" class="form-control" name="mensaje" placeholder="Asunto (Pedido, consulta…)" required>
-                </div>
-                <div class="invalid-feedback">Ingrese su mensaje.</div>
-              </div>
-            </div>
-
-            <!-- Botón -->
-            <div class="col-12 text-center">
-              <button type="submit" class="btn btn-primary btn-submit">Enviar Mensaje</button>
-            </div>
-          </div>
-        </form>
-        <!-- /form -->
       </div>
     </div>
-  </div>
-</div>
 
-<!-- Validación Bootstrap (no cambia colores) -->
-<script>
-  (function () {
-    const forms = document.querySelectorAll('.needs-validation');
-    Array.prototype.slice.call(forms).forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        form.classList.add('was-validated');
-      }, false);
-    });
-  })();
-</script>
-
-
+    <script>
+      (function () {
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+          form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+          }, false);
+        });
+      })();
+    </script>
+  </section>
 
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
@@ -736,7 +679,6 @@
 
   <!-- Preloader -->
   <style>#preloader{display:none !important;}</style>
-
 
   <!-- ======= JS ======= -->
   <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
