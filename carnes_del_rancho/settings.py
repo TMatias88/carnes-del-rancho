@@ -126,26 +126,35 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# ================================
-# SPACES / S3 STORAGE (Producción)
-# ================================
-if not DEBUG:  # Solo en producción
+# =====================================
+# MEDIA (Local vs DigitalOcean Spaces)
+# =====================================
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+# Si DEBUG=True → usar media local (tu Mac)
+if DEBUG:
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+
+# Si DEBUG=False → producción → usar DigitalOcean Spaces
+else:
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
     AWS_ACCESS_KEY_ID = os.getenv("SPACES_KEY")
     AWS_SECRET_ACCESS_KEY = os.getenv("SPACES_SECRET")
-    AWS_STORAGE_BUCKET_NAME = os.getenv("SPACES_BUCKET_NAME")
-    AWS_S3_ENDPOINT_URL = os.getenv("SPACES_ENDPOINT")
+    AWS_STORAGE_BUCKET_NAME = os.getenv("SPACES_BUCKET_NAME")  # carnes-del-rancho-media
+    AWS_S3_ENDPOINT_URL = os.getenv("SPACES_ENDPOINT")         # https://nyc3.digitaloceanspaces.com
+
+    AWS_S3_REGION_NAME = "nyc3"  # Región de tu Space (IMPORTANTE)
+    AWS_S3_ADDRESSING_STYLE = "virtual"
+    AWS_DEFAULT_ACL = "public-read"
 
     AWS_S3_OBJECT_PARAMETERS = {
         "CacheControl": "max-age=86400",
     }
 
-    # Hace las URLs públicas
-    AWS_DEFAULT_ACL = "public-read"
-
-    # Genera URLs correctas para Spaces
-    AWS_S3_ADDRESSING_STYLE = "virtual"
+    # URL base para archivos media en Spaces
+    MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_REGION_NAME}.digitaloceanspaces.com/"
 
 
 
