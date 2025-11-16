@@ -11,13 +11,11 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret")
 DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
 
-# Incluyo ambos por si pruebas en Render y en DigitalOcean; agrega tu dominio propio luego.
 ALLOWED_HOSTS = os.getenv(
     "ALLOWED_HOSTS",
     ".ondigitalocean.app,.onrender.com,localhost,127.0.0.1"
 ).split(",")
 
-# Para formularios/CSRF detrás de HTTPS en DO/Render; agrega tu dominio propio cuando lo conectes.
 CSRF_TRUSTED_ORIGINS = [
     "https://*.ondigitalocean.app",
     "https://*.onrender.com",
@@ -39,18 +37,22 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+
     # apps del proyecto
     "catalog",
     "cart",
     "orders",
     "pages",
     "payments",
+
+    # AWS S3 / Spaces
+    "storages",
 ]
 
 # === Middleware ===============================================================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # 🔥 sirve estáticos en prod
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -79,35 +81,27 @@ TEMPLATES = [
     },
 ]
 
-# ✅ Agrega esto justo DESPUÉS del bloque TEMPLATES (afuera, no dentro)
 TEMPLATES[0]["OPTIONS"].setdefault("builtins", [])
 TEMPLATES[0]["OPTIONS"].setdefault("libraries", {})
 
-# Hace disponible el filtro globalmente
 if "orders.templatetags.form_extras" not in TEMPLATES[0]["OPTIONS"]["builtins"]:
     TEMPLATES[0]["OPTIONS"]["builtins"].append("orders.templatetags.form_extras")
 
-# Permite también usar {% load form_extras %}
 TEMPLATES[0]["OPTIONS"]["libraries"]["form_extras"] = "orders.templatetags.form_extras"
-
 
 WSGI_APPLICATION = "carnes_del_rancho.wsgi.application"
 
 # === Database (PostgreSQL) ====================================================
-# Opción A (producción): usa DATABASE_URL (DigitalOcean/Render la proveen).
-# Opción B (dev/local): usa tus variables DB_* (las que ya tenías).
 DATABASES = {}
 _database_url = os.getenv("DATABASE_URL", "").strip()
 
 if _database_url:
-    # Producción: parsea la URL y exige SSL (recomendado en DO)
     DATABASES["default"] = dj_database_url.config(
         default=_database_url,
         conn_max_age=600,
         ssl_require=True,
     )
 else:
-    # Desarrollo/local: tus credenciales actuales
     DATABASES["default"] = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.getenv("DB_NAME", "carnes_rancho"),
@@ -127,54 +121,60 @@ AUTH_PASSWORD_VALIDATORS = [
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# === Static & Media ===========================================================
+# === Static ===================================================================
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]  # mantiene tu carpeta 'static' en dev
-STATIC_ROOT = BASE_DIR / "staticfiles"    # carpeta de colecta para prod
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# === Media (Local vs DigitalOcean Spaces) =====================================
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# === Email (SMTP real; cae a consola si faltan credenciales) ==================
-EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.mail.me.com")  # iCloud por defecto
+# If DEBUG=True → local media, no Spaces
+if DEBUG:
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+
+# If DEBUG=False → production, enable Spaces
+else:
+    # Credenciales de Spaces desde variables de entorno
+    AWS_ACCESS_KEY_ID = os.getenv("SPACES_KEY")
+    AWS_SECRET_ACCESS_KEY = os.getenv("SPACES_SECRET")
+    AWS_STORAGE_BUCKET_NAME = os.getenv("SPACES_BUCKET_NAME", "carnes-del-rancho-media")
+    AWS_S3_ENDPOINT_URL = os.getenv(
+        "SPACES_ENDPOINT",
+        "https://nyc3.digitaloceanspaces.com"  # Cambiar si tu región NO es NYC3
+    )
+
+    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
+    AWS_DEFAULT_ACL = "public-read"
+
+    # 🔥 ESTA ES LA LÍNEA CLAVE
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+# === Email ====================================================================
+EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.mail.me.com")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True").lower() == "true"
-EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "False").lower() == "true"  # normalmente False
+EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "False").lower() == "true"
 EMAIL_TIMEOUT = int(os.getenv("EMAIL_TIMEOUT", "30"))
 
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "tatianamatias@icloud.com")  # remitente
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")  # contraseña de aplicación
-
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "tatianamatias@icloud.com")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
 SERVER_EMAIL = os.getenv("SERVER_EMAIL", DEFAULT_FROM_EMAIL)
-EMAIL_SUBJECT_PREFIX = os.getenv("EMAIL_SUBJECT_PREFIX", "[Carnes del Rancho] ")
 
-# Destinatarios para el formulario (coma-separados)
 _contact_list = os.getenv("CONTACT_RECIPIENTS", "tatianamatias@icloud.com")
 CONTACT_RECIPIENTS = [x.strip() for x in _contact_list.split(",") if x.strip()]
 
-# Usa SMTP solo si hay password; si no, imprime en consola (útil en dev)
 if EMAIL_HOST_PASSWORD:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-# === Seguridad extra en producción ===========================================# Configuración para producción
-# ======= FORZAR STORAGE LOCAL EN DEBUG (EVITAR S3/Spaces EN DESARROLLO) =======
-# Si estás desarrollando en tu Mac, queremos SIEMPRE FileSystemStorage.
-# Esto ignora DEFAULT_FILE_STORAGE que venga de variables de entorno o líneas anteriores.
-if DEBUG:
-    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
-    MEDIA_URL = "/media/"
-    # MEDIA_ROOT ya estaba definido arriba como BASE_DIR / "media"
-
-
-# === Logging básico (útil en DO) =============================================
+# === Logging ==================================================================
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {"console": {"class": "logging.StreamHandler"}},
     "root": {"handlers": ["console"], "level": os.getenv("LOG_LEVEL", "INFO")},
 }
-
-#DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
