@@ -138,16 +138,16 @@ if not DEBUG:
     AWS_ACCESS_KEY_ID = os.getenv("SPACES_KEY")
     AWS_SECRET_ACCESS_KEY = os.getenv("SPACES_SECRET")
     AWS_STORAGE_BUCKET_NAME = os.getenv("SPACES_BUCKET_NAME")
-    AWS_S3_ENDPOINT_URL = os.getenv("SPACES_ENDPOINT")  # ojo
     AWS_S3_REGION_NAME = "nyc3"
-    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
-    AWS_DEFAULT_ACL = "public-read"
+    AWS_S3_ENDPOINT_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_REGION_NAME}.digitaloceanspaces.com"
 
     MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/"
+
 else:
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
+
 
 
 # === Email ====================================================================
