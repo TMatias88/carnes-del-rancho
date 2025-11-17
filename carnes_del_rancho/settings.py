@@ -128,6 +128,10 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
+
+
+DEBUG = os.getenv("DEBUG", "False") == "True"
+
 if not DEBUG:
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
@@ -143,7 +147,6 @@ if not DEBUG:
 else:
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
-
 
 
 # === Email ====================================================================
