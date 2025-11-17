@@ -135,19 +135,21 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 if not DEBUG:
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
-    AWS_ACCESS_KEY_ID = os.getenv("SPACES_KEY")
-    AWS_SECRET_ACCESS_KEY = os.getenv("SPACES_SECRET")
-    AWS_STORAGE_BUCKET_NAME = os.getenv("SPACES_BUCKET_NAME")
+    # Lee AWS_* si existen, sino usa SPACES_*
+    AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID") or os.getenv("SPACES_KEY")
+    AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY") or os.getenv("SPACES_SECRET")
+    AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME") or os.getenv("SPACES_BUCKET_NAME")
+
     AWS_S3_REGION_NAME = "nyc3"
-    AWS_S3_ENDPOINT_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com"
+    AWS_S3_ENDPOINT_URL = "https://nyc3.digitaloceanspaces.com"
     AWS_DEFAULT_ACL = "public-read"
 
-    # PRODUCCIÓN EN DIGITALOCEAN
-    MEDIA_URL = "https://carnes-del-rancho-media.nyc3.digitaloceanspaces.com/"
-    MEDIA_ROOT = ""  # NO se usa localmente en producción
+    MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com/"
+    MEDIA_ROOT = ""
 else:
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
+
 
 
 # === Email ====================================================================
