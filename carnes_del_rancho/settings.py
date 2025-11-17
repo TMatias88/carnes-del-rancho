@@ -132,25 +132,30 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
+# === Archivos MEDIA / SPACES / S3 =====================================================
+
 if not DEBUG:
+    # Usar almacenamiento S3 de boto3 en producción
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
-    # Lee AWS_* si existen, sino usa SPACES_*
+    # Compatibilidad: usar AWS_* si existen, sino usar SPACES_*
     AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID") or os.getenv("SPACES_KEY")
     AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY") or os.getenv("SPACES_SECRET")
     AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME") or os.getenv("SPACES_BUCKET_NAME")
 
+    # Configuración DigitalOcean Spaces
     AWS_S3_REGION_NAME = "nyc3"
     AWS_S3_ENDPOINT_URL = "https://nyc3.digitaloceanspaces.com"
     AWS_DEFAULT_ACL = "public-read"
 
+    # URL pública para imágenes
     MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com/"
-    MEDIA_ROOT = ""
+    MEDIA_ROOT = ""  # No se usa localmente en producción
+
 else:
+    # Modo local
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
-
-
 
 # === Email ====================================================================
 EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.mail.me.com")
