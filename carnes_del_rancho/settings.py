@@ -132,18 +132,16 @@ if not DEBUG:
 
     AWS_ACCESS_KEY_ID = os.getenv("SPACES_KEY")
     AWS_SECRET_ACCESS_KEY = os.getenv("SPACES_SECRET")
-    AWS_STORAGE_BUCKET_NAME = os.getenv("SPACES_BUCKET_NAME")
+    AWS_STORAGE_BUCKET_NAME = os.getenv("SPACES_BUCKET_NAME")  # debe ser "carnes-del-rancho-media"
     AWS_S3_REGION_NAME = "nyc3"
     AWS_S3_ENDPOINT_URL = "https://nyc3.digitaloceanspaces.com"
-    AWS_DEFAULT_ACL = "public-read"
 
-    MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com/"
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com"
+
+    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
 else:
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
-
-
-
 
 
 # === Email ====================================================================
