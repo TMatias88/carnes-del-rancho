@@ -142,8 +142,9 @@ if not DEBUG:
     AWS_S3_ENDPOINT_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com"
     AWS_DEFAULT_ACL = "public-read"
 
-    MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com/products/"
-    MEDIA_ROOT = ""
+    # PRODUCCIÓN EN DIGITALOCEAN
+    MEDIA_URL = "https://carnes-del-rancho-media.nyc3.digitaloceanspaces.com/"
+    MEDIA_ROOT = ""  # NO se usa localmente en producción
 else:
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
