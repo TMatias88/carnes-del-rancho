@@ -139,7 +139,7 @@ if not DEBUG:
     AWS_SECRET_ACCESS_KEY = os.getenv("SPACES_SECRET")
     AWS_STORAGE_BUCKET_NAME = os.getenv("SPACES_BUCKET_NAME")
     AWS_S3_REGION_NAME = "nyc3"
-    AWS_S3_ENDPOINT_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com"
+    AWS_S3_ENDPOINT_URL = f"https://nyc3.digitaloceanspaces.com"
     AWS_DEFAULT_ACL = "public-read"
 
     MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com/"
