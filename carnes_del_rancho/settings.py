@@ -132,21 +132,21 @@ if not DEBUG:
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 
-if not DEBUG:   # PRODUCCIÓN
+if not DEBUG:
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
     AWS_ACCESS_KEY_ID = os.getenv("SPACES_KEY")
     AWS_SECRET_ACCESS_KEY = os.getenv("SPACES_SECRET")
     AWS_STORAGE_BUCKET_NAME = os.getenv("SPACES_BUCKET_NAME")
     AWS_S3_REGION_NAME = "nyc3"
-
     AWS_S3_ENDPOINT_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com"
-    MEDIA_URL = AWS_S3_ENDPOINT_URL + "/"
+    AWS_DEFAULT_ACL = "public-read"
 
-else:  # LOCAL
-    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+    MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com/products/"
+else:
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
+
 
 
 
