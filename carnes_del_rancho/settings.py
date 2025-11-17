@@ -132,23 +132,22 @@ if not DEBUG:
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 
-# === Media (Local vs DigitalOcean Spaces) ================================
-MEDIA_URL = "https://carnes-del-rancho-media.nyc3.digitaloceanspaces.com/"
-MEDIA_ROOT = BASE_DIR / "media"
-
 if not DEBUG:
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
     AWS_ACCESS_KEY_ID = os.getenv("SPACES_KEY")
     AWS_SECRET_ACCESS_KEY = os.getenv("SPACES_SECRET")
     AWS_STORAGE_BUCKET_NAME = os.getenv("SPACES_BUCKET_NAME")
-    AWS_S3_ENDPOINT_URL = os.getenv("SPACES_ENDPOINT")
-
+    AWS_S3_ENDPOINT_URL = os.getenv("SPACES_ENDPOINT")  # ojo
     AWS_S3_REGION_NAME = "nyc3"
     AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
     AWS_DEFAULT_ACL = "public-read"
+
+    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/"
 else:
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = BASE_DIR / "media"
 
 
 # === Email ====================================================================
