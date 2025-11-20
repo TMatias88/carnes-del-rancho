@@ -129,6 +129,9 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # === Archivos MEDIA / SPACES / S3 =====================================================
+
+
+# === MEDIA / PRODUCTION (DigitalOcean Spaces) ===
 if not DEBUG:
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
@@ -143,11 +146,14 @@ if not DEBUG:
     AWS_QUERYSTRING_AUTH = False
     AWS_S3_FILE_OVERWRITE = False
 
-    # Dominio del bucket correcto
+    # Dominio correcto del Space
     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com"
 
+    # MEDIA en producción
     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
-    MEDIA_ROOT = ""  # no se usa en producción
+    MEDIA_ROOT = ""   # no se usa en producción
+
+# === MEDIA / LOCAL ===
 else:
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
