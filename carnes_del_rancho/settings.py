@@ -76,12 +76,13 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "django.template.context_processors.static",
+                "django.template.context_processors.static",  # OK remover?
             ],
         },
     },
 ]
 
+# Fix builtins / libraries
 TEMPLATES[0]["OPTIONS"].setdefault("builtins", [])
 TEMPLATES[0]["OPTIONS"].setdefault("libraries", {})
 
@@ -127,11 +128,6 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-
-
-
-DEBUG = os.getenv("DEBUG", "False") == "True"
-
 # === Archivos MEDIA / SPACES / S3 =====================================================
 if not DEBUG:
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
@@ -144,13 +140,17 @@ if not DEBUG:
     AWS_S3_ENDPOINT_URL = "https://nyc3.digitaloceanspaces.com"
     AWS_S3_ADDRESSING_STYLE = "virtual"
     AWS_DEFAULT_ACL = "public-read"
+    AWS_QUERYSTRING_AUTH = False
+    AWS_S3_FILE_OVERWRITE = False
 
-    MEDIA_URL = "https://carnes-del-rancho-media.nyc3.digitaloceanspaces.com/"
-    MEDIA_ROOT = ""
+    # Dominio del bucket correcto
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com"
+
+    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
+    MEDIA_ROOT = ""  # no se usa en producción
 else:
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
-
 
 # === Email ====================================================================
 EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.mail.me.com")
