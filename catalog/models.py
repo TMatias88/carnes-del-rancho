@@ -3,6 +3,9 @@ from django.core.validators import MinValueValidator
 from django.urls import reverse
 from django.utils.text import slugify
 
+# ← Storage que sobrescribe archivos en DigitalOcean Spaces
+from carnes_del_rancho.storage import OverwriteStorage
+
 
 class Category(models.Model):
     name = models.CharField("Nombre", max_length=80, unique=True)
@@ -21,11 +24,10 @@ class Category(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        # /catalog/<slug>/
         return reverse("catalogo_por_categoria", args=[self.slug])
 
     def save(self, *args, **kwargs):
-        # Autogenerar slug si no viene; asegurar unicidad simple
+        # Autogenerar slug si no viene, evitando duplicados.
         if not self.slug:
             base = slugify(self.name)
             slug = base
@@ -55,12 +57,16 @@ class Product(models.Model):
         help_text="Precio en colones costarricenses (₡).",
     )
     stock = models.PositiveIntegerField("Stock", default=0)
+
+    # Storage configurado para sobrescribir imágenes sin renombrarlas
     image = models.ImageField(
         "Imagen",
         upload_to="products/",
+        storage=OverwriteStorage(),
         blank=True,
         null=True,
     )
+
     is_active = models.BooleanField("Activo", default=True)
     created_at = models.DateTimeField("Creado", auto_now_add=True)
     updated_at = models.DateTimeField("Actualizado", auto_now=True)
@@ -80,16 +86,19 @@ class Product(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        # Si luego haces detalle: /catalog/<category>/<product-slug>/
-        # Por ahora apunta al catálogo (puedes crear 'product_detail' después)
         return reverse("catalogo")
 
     @property
     def price_crc_display(self) -> str:
-        # Formato bonito: ₡12 345.67
-        return f"₡{self.price_crc:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+        return (
+            f"₡{self.price_crc:,.2f}"
+            .replace(",", "X")
+            .replace(".", ",")
+            .replace("X", ".")
+        )
 
     def save(self, *args, **kwargs):
+        # Autogenerar slug si no viene, evitando duplicados.
         if not self.slug:
             base = slugify(self.name)
             slug = base
