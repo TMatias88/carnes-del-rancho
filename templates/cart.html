@@ -33,28 +33,27 @@
                   <tr style="border-color:#1f2930;">
                     <td>
                       <div class="d-flex align-items-center gap-3">
-                        {% if i.product.image %}
-                          <img src="{{ i.product.image.url }}" alt="{{ i.product.name }}"
+
+                        {% if i.product.image_url %}
+                          <img src="{{ i.product.image_url }}"
+                               alt="{{ i.product.name }}"
+                               style="width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid #2a343a;">
+                        {% else %}
+                          <img src="{% static 'assets/img/placeholder.jpg' %}"
+                               alt="{{ i.product.name }}"
                                style="width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid #2a343a;">
                         {% endif %}
+
                         <div>
                           <div class="fw-semibold text-white">{{ i.product.name }}</div>
                           {% if i.product.description %}
                             <div class="text-muted small">{{ i.product.description|truncatechars:80 }}</div>
                           {% endif %}
                         </div>
+
                       </div>
                     </td>
-                    <td class="text-center text-white">{{ i.qty }}</td>
-                    <td class="text-end text-white">₡ {{ i.total }}</td>
-                    <td class="text-end">
-                      <form action="{% url 'cart:cart_remove' i.product.id %}" method="post" class="d-inline">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-outline-danger">
-                          Quitar
-                        </button>
-                      </form>
-                    </td>
+
                   </tr>
                 {% endfor %}
               </tbody>
