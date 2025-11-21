@@ -317,7 +317,6 @@
                     <div class="col-12 col-md-6 isotope-item filter-{{ p.category.slug }}">
                       <div class="menu-item d-flex align-items-center gap-4">
 
-
                         {% if p.image_url %}
                             <img src="{{ p.image_url }}" class="menu-img img-fluid rounded-3" alt="{{ p.name }}">
                         {% elif p.image %}
@@ -325,9 +324,6 @@
                         {% else %}
                             <img src="{% static 'assets/img/placeholder.jpg' %}" class="menu-img img-fluid rounded-3" alt="{{ p.name }}">
                         {% endif %}
-
-
-
 
 
                         <div class="menu-content">
