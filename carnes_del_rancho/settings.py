@@ -136,6 +136,7 @@ if not DEBUG:
 
     # Storage personalizado para NO RENOMBRAR IMÁGENES
     DEFAULT_FILE_STORAGE = "carnes_del_rancho.storage.StaticNameStorage"
+    AWS_S3_FILE_OVERWRITE = True
 
     AWS_ACCESS_KEY_ID = os.getenv("SPACES_KEY")
     AWS_SECRET_ACCESS_KEY = os.getenv("SPACES_SECRET")
@@ -148,8 +149,6 @@ if not DEBUG:
     AWS_DEFAULT_ACL = "public-read"
     AWS_QUERYSTRING_AUTH = False
 
-    # Importantísimo: NO crear nombres aleatorios
-    AWS_S3_FILE_OVERWRITE = True
 
     # Dominio correcto del Space
     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com"
