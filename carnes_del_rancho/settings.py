@@ -136,6 +136,7 @@ if not DEBUG:
 
     # Storage personalizado para NO RENOMBRAR IMÁGENES
     DEFAULT_FILE_STORAGE = "carnes_del_rancho.storage.StaticNameStorage"
+
     AWS_S3_FILE_OVERWRITE = True
 
     AWS_ACCESS_KEY_ID = os.getenv("SPACES_KEY")
