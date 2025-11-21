@@ -133,7 +133,9 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # === MEDIA / PRODUCTION (DigitalOcean Spaces) ===
 if not DEBUG:
-    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+    # Storage personalizado para NO RENOMBRAR IMÁGENES
+    DEFAULT_FILE_STORAGE = "carnes_del_rancho.storage.StaticNameStorage"
 
     AWS_ACCESS_KEY_ID = os.getenv("SPACES_KEY")
     AWS_SECRET_ACCESS_KEY = os.getenv("SPACES_SECRET")
@@ -142,16 +144,20 @@ if not DEBUG:
     AWS_S3_REGION_NAME = "nyc3"
     AWS_S3_ENDPOINT_URL = "https://nyc3.digitaloceanspaces.com"
     AWS_S3_ADDRESSING_STYLE = "virtual"
+
     AWS_DEFAULT_ACL = "public-read"
     AWS_QUERYSTRING_AUTH = False
-    AWS_S3_FILE_OVERWRITE = False
+
+    # Importantísimo: NO crear nombres aleatorios
+    AWS_S3_FILE_OVERWRITE = True
 
     # Dominio correcto del Space
     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com"
 
     # MEDIA en producción
     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
-    MEDIA_ROOT = ""   # no se usa en producción
+    MEDIA_ROOT = ""  # No se usa en producción
+  # no se usa en producción
 
 # === MEDIA / LOCAL ===
 else:
