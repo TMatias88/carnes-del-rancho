@@ -87,7 +87,7 @@ class Product(models.Model):
             self.slug = slug
         super().save(*args, **kwargs)
 
-    # 🔥🔥🔥 PROPIEDAD FINAL: el template usa solo esto
+    # PROPIEDAD FINAL: el template usa solo esto
     @property
     def final_image(self):
         return resolve_image(self)
