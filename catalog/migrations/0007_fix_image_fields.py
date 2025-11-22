@@ -1,6 +1,5 @@
 from django.db import migrations
 
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -8,7 +7,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        # Forzamos que Django considere aplicados los cambios
-        # y no intente buscar image_file nunca más.
-        migrations.RunSQL(sql="", reverse_sql=""),
+        migrations.RunSQL(
+            sql="ALTER TABLE catalog_product DROP COLUMN IF EXISTS image_file;",
+            reverse_sql="",
+        ),
     ]
