@@ -128,6 +128,8 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# Necesario para DigitalOcean + Whitenoise
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # === Archivos MEDIA / SPACES / S3 =====================================================
 
 
@@ -155,9 +157,10 @@ if not DEBUG:
     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com"
 
     # MEDIA en producción
-    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
-    MEDIA_ROOT = ""  # No se usa en producción
-  # no se usa en producción
+    import os
+
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # === MEDIA / LOCAL ===
 else:
