@@ -3,13 +3,13 @@ import os
 from dotenv import load_dotenv
 import dj_database_url
 
-# === Paths / ENV ==============================================================
+# === Paths / ENV ==========================================================================
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
-# === Core ====================================================================
+# === Core =================================================================================
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret")
-DEBUG = os.getenv("DEBUG", "True").lower() == "true"
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = [
     "carnes-del-rancho.onrender.com",
@@ -17,22 +17,24 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
 ]
 
-# === CSRF ====================================================================
+# === CSRF =================================================================================
 CSRF_TRUSTED_ORIGINS = [
     "https://carnes-del-rancho.onrender.com",
 ]
 
 _extra_csrf = os.getenv("CSRF_TRUSTED_ORIGINS", "")
 if _extra_csrf.strip():
-    CSRF_TRUSTED_ORIGINS += [x.strip() for x in _extra_csrf.split(",") if x.strip()]
+    CSRF_TRUSTED_ORIGINS += [
+        x.strip() for x in _extra_csrf.split(",") if x.strip()
+    ]
 
-# === Configuración regional ===================================================
+# === Configuración regional ================================================================
 LANGUAGE_CODE = "es"
 TIME_ZONE = "America/Costa_Rica"
 USE_I18N = True
 USE_TZ = True
 
-# === Apps ====================================================================
+# === Apps ==================================================================================
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.staticfiles",
@@ -47,12 +49,9 @@ INSTALLED_APPS = [
     "orders",
     "pages",
     "payments",
-
-    # Para Spaces (DigitalOcean)
-    "storages",
 ]
 
-# === Middleware ===============================================================
+# === Middleware ============================================================================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -66,7 +65,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "carnes_del_rancho.urls"
 
-# === Templates ================================================================
+# === Templates =============================================================================
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -84,10 +83,10 @@ TEMPLATES = [
     },
 ]
 
-# === WSGI =====================================================================
+# === WSGI ==================================================================================
 WSGI_APPLICATION = "carnes_del_rancho.wsgi.application"
 
-# === Database (Render PostgreSQL) ============================================
+# === DATABASE (Render) =====================================================================
 DATABASE_URL = os.getenv("DATABASE_URL", "")
 
 DATABASES = {}
@@ -95,10 +94,9 @@ if DATABASE_URL:
     DATABASES["default"] = dj_database_url.config(
         default=DATABASE_URL,
         conn_max_age=600,
-        ssl_require=True,
+        ssl_require=False,     # Render NO usa SSL obligatorio
     )
 else:
-    # Config local
     DATABASES["default"] = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.getenv("DB_NAME", "local_db"),
@@ -108,7 +106,7 @@ else:
         "PORT": os.getenv("DB_PORT", "5432"),
     }
 
-# === Password Validation ======================================================
+# === Password Validation ====================================================================
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -118,36 +116,17 @@ AUTH_PASSWORD_VALIDATORS = [
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# === Static ===================================================================
+# === STATIC (WhiteNoise – Render) ============================================================
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# === Media (DigitalOcean Spaces en producción) ====================================
-if not DEBUG:
-    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+# === MEDIA (local y Render – sin Spaces) =====================================================
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
-    AWS_ACCESS_KEY_ID = os.getenv("SPACES_KEY")
-    AWS_SECRET_ACCESS_KEY = os.getenv("SPACES_SECRET")
-    AWS_STORAGE_BUCKET_NAME = "carnes-del-rancho-media"
-    AWS_S3_REGION_NAME = "nyc3"
-    AWS_S3_ENDPOINT_URL = "https://nyc3.digitaloceanspaces.com"
-    AWS_S3_ADDRESSING_STYLE = "virtual"
-    AWS_DEFAULT_ACL = "public-read"
-    AWS_QUERYSTRING_AUTH = False
-
-    # Dominio público
-    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com"
-
-    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
-    MEDIA_ROOT = "media"
-else:
-    MEDIA_URL = "/media/"
-    MEDIA_ROOT = BASE_DIR / "media"
-
-# === Email ====================================================================
+# === Email ===================================================================================
 EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.mail.me.com")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True").lower() == "true"
@@ -171,7 +150,7 @@ if EMAIL_HOST_PASSWORD:
 else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-# === Logging ==================================================================
+# === Logging ==================================================================================
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
