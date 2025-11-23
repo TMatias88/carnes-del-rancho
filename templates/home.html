@@ -304,77 +304,77 @@
         </div>
 
         <!-- Catálogo de Productos -->
-        <section id="menu" class="menu section">
-          <div class="container" data-aos="fade-up">
-            <div class="isotope-layout"
-                 data-default-filter="*"
-                 data-layout="fitRows"
-                 data-sort="original-order">
+        <!-- Catálogo de Productos -->
+<section id="menu" class="menu section">
+  <div class="container" data-aos="fade-up">
+    <div class="isotope-layout"
+         data-default-filter="*"
+         data-layout="fitRows"
+         data-sort="original-order">
 
-              <div class="menu-container isotope-container row gy-4">
-                {% if products %}
-                  {% for p in products %}
-                    <div class="col-12 col-md-6 isotope-item filter-{{ p.category.slug }}">
-                      <div class="menu-item d-flex align-items-center gap-4">
+      <div class="menu-container isotope-container row gy-4">
+        {% if products %}
+          {% for p in products %}
+            <div class="col-12 col-md-6 isotope-item filter-{{ p.category.slug }}">
+              <div class="menu-item d-flex align-items-center gap-4">
 
-                        <img
-                          class="menu-img img-fluid rounded-3"
-                          width="100"
-                          height="100"
-                          style="object-fit: cover;"
-                          src="{% if p.image %}{{ p.image.url }}{% elif p.image_url %}{{ p.image_url }}{% else %}{% static 'assets/img/placeholder.png' %}{% endif %}"
-                          alt="{{ p.name }}"
-                        >
+                <!-- 🔥 IMAGEN CORRECTA -->
+                <img
+                  class="menu-img img-fluid rounded-3"
+                  width="100"
+                  height="100"
+                  style="object-fit: cover;"
+                  src="{{ p.final_image }}"
+                  alt="{{ p.name }}"
+                >
 
+                <div class="menu-content">
+                  <h5 class="mb-1">{{ p.name }}</h5>
 
+                  {% if p.description %}
+                    <p class="ingredients mb-2 small">{{ p.description }}</p>
+                  {% endif %}
 
-                        <div class="menu-content">
-                          <h5 class="mb-1">{{ p.name }}</h5>
-                          {% if p.description %}
-                            <p class="ingredients mb-2 small">{{ p.description }}</p>
-                          {% endif %}
+                  <div class="d-flex justify-content-between align-items-center">
 
-                          <div class="d-flex justify-content-between align-items-center">
-                            {% if p.price_crc %}
-                              <span class="price">₡{{ p.price_crc }}</span>
-                            {% elif p.price %}
-                              <span class="price">₡{{ p.price }}</span>
-                            {% endif %}
+                    <!-- 🔥 PRECIO CORRECTO -->
+                    <span class="price">{{ p.price_crc_display }}</span>
 
-                            <form action="{% url 'cart:cart_add' p.id %}" method="post" class="d-inline js-cart-add">
-                              {% csrf_token %}
-                              <input type="hidden" name="qty" value="1">
-                              <button type="submit" class="btn btn-sm btn-brand">
-                                <i class="bi bi-cart-fill me-1"></i> Agregar al carrito
-                              </button>
-                            </form>
-                          </div>
-                        </div>
+                    <form action="{% url 'cart:cart_add' p.id %}" method="post" class="d-inline js-cart-add">
+                      {% csrf_token %}
+                      <input type="hidden" name="qty" value="1">
+                      <button type="submit" class="btn btn-sm btn-brand">
+                        <i class="bi bi-cart-fill me-1"></i> Agregar al carrito
+                      </button>
+                    </form>
 
-                      </div>
-                    </div>
-                  {% endfor %}
-                {% else %}
-                  <div class="col-12 text-center">
-                    <p class="text-muted mb-0">No hay productos disponibles por ahora.</p>
                   </div>
-                {% endif %}
-              </div><!-- /.isotope-container -->
+                </div>
 
-              <!-- BOTÓN DE DESCARGA DE LISTA DE PRECIOS -->
-              <div class="text-center mt-4 mb-2" id="download-prices">
-                <a href="{% static 'assets/docs/lista-precios.pdf' %}"
-                   class="btn btn-brand btn-lg px-4"
-                   download="lista-precios-carnes-del-rancho.pdf">
-                  <i class="bi bi-file-earmark-pdf-fill me-2"></i>
-                  Descargar lista de precios
-                </a>
               </div>
-              <!-- /FIN BOTÓN DE DESCARGA -->
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-12 text-center">
+            <p class="text-muted mb-0">No hay productos disponibles por ahora.</p>
+          </div>
+        {% endif %}
+      </div>
 
-            </div><!-- /.isotope-layout -->
-          </div><!-- /.container -->
-        </section>
+      <!-- BOTÓN DE DESCARGA -->
+      <div class="text-center mt-4 mb-2" id="download-prices">
+        <a href="{% static 'assets/docs/lista-precios.pdf' %}"
+           class="btn btn-brand btn-lg px-4"
+           download="lista-precios-carnes-del-rancho.pdf">
+          <i class="bi bi-file-earmark-pdf-fill me-2"></i>
+          Descargar lista de precios
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
         <!-- /Catálogo de Productos -->
 
       </div><!-- /.isotope-layout -->

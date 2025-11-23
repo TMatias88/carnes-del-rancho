@@ -15,74 +15,98 @@
   <div class="container">
 
     {% if items %}
-      <div class="card shadow-sm border-0 rounded-3 overflow-hidden" style="background:#141a1d;border:1px solid #222a30;">
-        <div class="card-body p-0">
+    <div class="card shadow-sm border-0 rounded-3 overflow-hidden"
+         style="background:#141a1d;border:1px solid #222a30;">
+      <div class="card-body p-0">
 
-          <div class="table-responsive">
-            <table class="table table-dark align-middle mb-0" style="--bs-table-bg:#151c20;--bs-table-striped-bg:#12181b;">
-              <thead>
-                <tr style="background:#0d2a35;">
-                  <th>Producto</th>
-                  <th class="text-center">Cantidad</th>
-                  <th class="text-end">Subtotal</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for i in items %}
-                  <tr style="border-color:#1f2930;">
-                    <td>
-                      <div class="d-flex align-items-center gap-3">
+        <div class="table-responsive">
+          <table class="table table-dark align-middle mb-0"
+                 style="--bs-table-bg:#151c20;--bs-table-striped-bg:#12181b;">
+            <thead>
+              <tr style="background:#0d2a35;">
+                <th>Producto</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-end">Subtotal</th>
+                <th></th>
+              </tr>
+            </thead>
 
-                        {% if i.product.image_url %}
-                          <img src="{{ i.product.image_url }}"
-                               alt="{{ i.product.name }}"
-                               style="width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid #2a343a;">
-                        {% else %}
-                          <img src="{% static 'assets/img/placeholder.jpg' %}"
-                               alt="{{ i.product.name }}"
-                               style="width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid #2a343a;">
-                        {% endif %}
+            <tbody>
+            {% for i in items %}
+              <tr style="border-color:#1f2930;">
 
-                        <div>
-                          <div class="fw-semibold text-white">{{ i.product.name }}</div>
-                          {% if i.product.description %}
-                            <div class="text-muted small">{{ i.product.description|truncatechars:80 }}</div>
-                          {% endif %}
-                        </div>
+                <!-- PRODUCTO -->
+                <td>
+                  <div class="d-flex align-items-center gap-3">
+                    <img src="{{ i.product.final_image }}"
+                         alt="{{ i.product.name }}"
+                         style="width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid #2a343a;">
+                    <div class="fw-semibold text-white">
+                      {{ i.product.name }}
+                    </div>
+                  </div>
+                </td>
 
-                      </div>
-                    </td>
+                <!-- CANTIDAD -->
+                <td class="text-center text-white">
+                  {{ i.qty }}
+                </td>
 
-                  </tr>
-                {% endfor %}
-              </tbody>
-              <tfoot>
-                <tr style="background:#10181c;border-top:2px solid #27323a;">
-                  <th colspan="2" class="text-end">Total</th>
-                  <th class="text-end text-white">₡ {{ summary.total_crc }}</th>
-                  <th></th>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
+                <!-- SUBTOTAL -->
+                <td class="text-end text-white">
+                  ₡ {{ i.total|floatformat:0 }}
+                </td>
 
-          <div class="d-flex gap-2 justify-content-end p-3 border-top" style="border-color:#222a30;">
-            <form action="{% url 'cart:cart_clear' %}" method="post" class="d-inline">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-outline-secondary">Vaciar carrito</button>
-            </form>
+                <!-- X (FORM POST) -->
+                <td class="text-end">
+                  <form action="{% url 'cart:cart_remove' i.product.id %}"
+                        method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit"
+                            style="background:none;border:none;color:#ff4d4d;font-size:22px;font-weight:bold;cursor:pointer;">
+                      &times;
+                    </button>
+                  </form>
+                </td>
 
-            <a href="{% url 'orders:checkout' %}" class="btn btn-primary">
-              Comprar
-            </a>
-          </div>
+              </tr>
+            {% endfor %}
+            </tbody>
+
+            <!-- TOTAL -->
+            <tfoot>
+              <tr style="background:#10181c;border-top:2px solid #27323a;">
+                <th colspan="2" class="text-end">TOTAL A PAGAR</th>
+                <th class="text-end text-white">₡ {{ summary.total_crc }}</th>
+                <th></th>
+              </tr>
+            </tfoot>
+
+          </table>
+        </div>
+
+        <!-- BOTONES -->
+        <div class="d-flex gap-2 justify-content-end p-3 border-top"
+             style="border-color:#222a30;">
+
+          <form action="{% url 'cart:cart_clear' %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-secondary">Vaciar carrito</button>
+          </form>
+
+          <a href="{% url 'orders:checkout' %}"
+             class="btn" style="background:#c62828;color:white;">
+            Comprar
+          </a>
 
         </div>
+
       </div>
+    </div>
 
     {% else %}
-      <div class="alert alert-info" style="background:#11353e;color:#e8f4f7;border:1px solid #1e5561;">
+      <div class="alert alert-info"
+           style="background:#11353e;color:#e8f4f7;border:1px solid #1e5561;">
         Tu carrito está vacío.
       </div>
       <a href="#menu" class="btn btn-warning">Ver catálogo</a>
