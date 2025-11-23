@@ -2,9 +2,13 @@ services:
   - type: web
     name: carnes-del-rancho
     env: python
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate --noinput
     startCommand: "gunicorn carnes_del_rancho.wsgi:application"
     envVars:
       DEBUG: False
       SECRET_KEY: ${SECRET_KEY}
       DATABASE_URL: ${DATABASE_URL}
+      PORT: 8000

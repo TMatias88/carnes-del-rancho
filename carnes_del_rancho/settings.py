@@ -9,23 +9,24 @@ load_dotenv(BASE_DIR / ".env")
 
 # === Core ====================================================================
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret")
-DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
+DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
 ALLOWED_HOSTS = [
-    'carnes-del-rancho.onrender.com',
-    'localhost',
-    '127.0.0.1'
+    "carnes-del-rancho.onrender.com",
+    "localhost",
+    "127.0.0.1",
 ]
 
-
+# === CSRF ====================================================================
 CSRF_TRUSTED_ORIGINS = [
-    "https://walrus-app-uvvxz.ondigitalocean.app"
+    "https://carnes-del-rancho.onrender.com",
 ]
 
 _extra_csrf = os.getenv("CSRF_TRUSTED_ORIGINS", "")
 if _extra_csrf.strip():
     CSRF_TRUSTED_ORIGINS += [x.strip() for x in _extra_csrf.split(",") if x.strip()]
 
+# === Configuración regional ===================================================
 LANGUAGE_CODE = "es"
 TIME_ZONE = "America/Costa_Rica"
 USE_I18N = True
@@ -40,14 +41,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
 
-    # apps del proyecto
+    # Apps del proyecto
     "catalog",
     "cart",
     "orders",
     "pages",
     "payments",
 
-    # AWS S3 / Spaces
+    # Para Spaces (DigitalOcean)
     "storages",
 ]
 
@@ -77,41 +78,34 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "django.template.context_processors.static",  # OK remover?
+                "django.template.context_processors.static",
             ],
         },
     },
 ]
 
-# Fix builtins / libraries
-TEMPLATES[0]["OPTIONS"].setdefault("builtins", [])
-TEMPLATES[0]["OPTIONS"].setdefault("libraries", {})
-
-if "orders.templatetags.form_extras" not in TEMPLATES[0]["OPTIONS"]["builtins"]:
-    TEMPLATES[0]["OPTIONS"]["builtins"].append("orders.templatetags.form_extras")
-
-TEMPLATES[0]["OPTIONS"]["libraries"]["form_extras"] = "orders.templatetags.form_extras"
-
+# === WSGI =====================================================================
 WSGI_APPLICATION = "carnes_del_rancho.wsgi.application"
 
-# === Database (PostgreSQL) ====================================================
-DATABASES = {}
-_database_url = os.getenv("DATABASE_URL", "").strip()
+# === Database (Render PostgreSQL) ============================================
+DATABASE_URL = os.getenv("DATABASE_URL", "")
 
-if _database_url:
+DATABASES = {}
+if DATABASE_URL:
     DATABASES["default"] = dj_database_url.config(
-        default=_database_url,
+        default=DATABASE_URL,
         conn_max_age=600,
         ssl_require=True,
     )
 else:
+    # Config local
     DATABASES["default"] = {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DB_NAME", "carnes_rancho"),
-        "USER": os.getenv("DB_USER", "CarnesDelRancho"),
-        "PASSWORD": os.getenv("DB_PASSWORD", "tati"),
+        "NAME": os.getenv("DB_NAME", "local_db"),
+        "USER": os.getenv("DB_USER", "local_user"),
+        "PASSWORD": os.getenv("DB_PASSWORD", "local_pass"),
         "HOST": os.getenv("DB_HOST", "127.0.0.1"),
-        "PORT": os.getenv("DB_PORT", "5433"),
+        "PORT": os.getenv("DB_PORT", "5432"),
     }
 
 # === Password Validation ======================================================
@@ -129,41 +123,26 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# Necesario para DigitalOcean + Whitenoise
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# === Archivos MEDIA / SPACES / S3 =====================================================
 
-
-# === MEDIA / PRODUCTION (DigitalOcean Spaces) ===
+# === Media (DigitalOcean Spaces en producción) ====================================
 if not DEBUG:
-
-    # Storage personalizado para NO RENOMBRAR IMÁGENES
-    DEFAULT_FILE_STORAGE = "carnes_del_rancho.storage.StaticNameStorage"
-
-    AWS_S3_FILE_OVERWRITE = True
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
     AWS_ACCESS_KEY_ID = os.getenv("SPACES_KEY")
     AWS_SECRET_ACCESS_KEY = os.getenv("SPACES_SECRET")
     AWS_STORAGE_BUCKET_NAME = "carnes-del-rancho-media"
-
     AWS_S3_REGION_NAME = "nyc3"
     AWS_S3_ENDPOINT_URL = "https://nyc3.digitaloceanspaces.com"
     AWS_S3_ADDRESSING_STYLE = "virtual"
-
     AWS_DEFAULT_ACL = "public-read"
     AWS_QUERYSTRING_AUTH = False
 
-
-    # Dominio correcto del Space
+    # Dominio público
     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com"
 
-    # MEDIA en producción
-    import os
-
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# === MEDIA / LOCAL ===
+    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
+    MEDIA_ROOT = "media"
 else:
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
@@ -175,13 +154,17 @@ EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True").lower() == "true"
 EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "False").lower() == "true"
 EMAIL_TIMEOUT = int(os.getenv("EMAIL_TIMEOUT", "30"))
 
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "tatianamatias@icloud.com")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
-SERVER_EMAIL = os.getenv("SERVER_EMAIL", DEFAULT_FROM_EMAIL)
 
-_contact_list = os.getenv("CONTACT_RECIPIENTS", "tatianamatias@icloud.com")
-CONTACT_RECIPIENTS = [x.strip() for x in _contact_list.split(",") if x.strip()]
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
+
+CONTACT_RECIPIENTS = [
+    x.strip()
+    for x in os.getenv("CONTACT_RECIPIENTS", EMAIL_HOST_USER).split(",")
+    if x.strip()
+]
 
 if EMAIL_HOST_PASSWORD:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
