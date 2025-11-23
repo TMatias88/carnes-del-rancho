@@ -1,19 +1,18 @@
-cat > render.yaml << 'EOF'
 services:
   - type: web
-    name: carnes-del-rancho
+    name: carnes-del-rancho-web
     env: python
-    plan: free
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
-    startCommand: "gunicorn carnes_del_rancho.wsgi:application --preload"
+    region: oregon  # o la región de Render que prefieras, p.ej. "oregon" o "vienna"
+    plan: free  # si quieres empezar gratis
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn carnes_del_rancho.wsgi:application
     envVars:
       - key: DEBUG
-        value: False
+        value: "False"
       - key: SECRET_KEY
-        generateValue: true
+        fromSecret: SECRET_KEY
       - key: ALLOWED_HOSTS
-        value: ".onrender.com,localhost,127.0.0.1"
-databases:
-  - name: carnes_db
-    plan: free
-EOF
+        value: "www.tudominio.com, carnes-del-rancho.onrender.com"
+      - key: DATABASE_URL
+        fromSecret: DATABASE_URL
+    staticPublishPath: staticfiles
