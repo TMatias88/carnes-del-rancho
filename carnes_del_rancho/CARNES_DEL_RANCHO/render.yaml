@@ -1,18 +1,10 @@
 services:
   - type: web
-    name: carnes-del-rancho-web
+    name: carnes-del-rancho
     env: python
-    region: oregon  # o la región de Render que prefieras, p.ej. "oregon" o "vienna"
-    plan: free  # si quieres empezar gratis
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn carnes_del_rancho.wsgi:application
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
+    startCommand: "gunicorn carnes_del_rancho.wsgi:application"
     envVars:
-      - key: DEBUG
-        value: "False"
-      - key: SECRET_KEY
-        fromSecret: SECRET_KEY
-      - key: ALLOWED_HOSTS
-        value: "www.tudominio.com, carnes-del-rancho.onrender.com"
-      - key: DATABASE_URL
-        fromSecret: DATABASE_URL
-    staticPublishPath: staticfiles
+      DEBUG: False
+      SECRET_KEY: ${SECRET_KEY}
+      DATABASE_URL: ${DATABASE_URL}
