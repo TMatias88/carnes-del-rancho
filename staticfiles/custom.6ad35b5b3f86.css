@@ -1,0 +1,75 @@
+/* ===== Panel administrativo Carnes del Rancho ===== */
+:root,
+html[data-theme="light"],
+html[data-theme="dark"] {
+  --primary: #8B0000;
+  --primary-fg: #ffffff;
+  --accent: #8B0000;
+  --link-fg: #ffffff;              /* ← Enlaces y textos ahora blancos */
+  --header-bg: #8B0000;
+  --header-color: #ffffff;
+  --breadcrumbs-bg: #b22222;
+  --body-quiet-color: #8B0000;
+  --body-quiet-color-fg: #ffffff;
+  --button-bg: #8B0000;
+  --object-tools-bg: #8B0000;
+  --selected-bg: #fdeaea;
+  --hairline-color: #8B0000;
+}
+
+/* ===== Header y breadcrumbs ===== */
+#header {
+  background: #8B0000 !important;
+  color: #fff !important;
+}
+#header a {
+  color: #fff !important;
+}
+div.breadcrumbs {
+  background: #b22222 !important;
+  color: #fff !important;
+  border-color: #b22222 !important;
+}
+div.breadcrumbs a {
+  color: #fff !important;
+}
+
+/* ===== Títulos de cada módulo (AUTENTICACIÓN, CATALOG, etc.) ===== */
+body.dashboard #container #content .module caption,
+body.dashboard #content .module caption,
+#container #content .module caption,
+.dashboard .module caption,
+.module caption,
+.module h2,
+.inline-group h2 {
+  background-color: #8B0000 !important;
+  color: #ffffff !important; /* ← texto blanco */
+  border-color: #8B0000 !important;
+}
+
+/* ===== Enlaces dentro de las barras ===== */
+.module caption a,
+.module h2 a {
+  color: #ffffff !important; /* ← texto blanco */
+}
+
+/* ===== Botones, herramientas y enlaces ===== */
+.button,
+input[type=submit],
+.submit-row input.default,
+.object-tools a:link,
+.object-tools a:visited {
+  background: #8B0000 !important;
+  color: #ffffff !important;
+  border-color: #8B0000 !important;
+}
+a {
+  color: #ffffff !important; /* ← todos los links blancos */
+}
+
+/* ===== Fila seleccionada ===== */
+tr.selected,
+.row1.selected,
+.row2.selected {
+  background: #fdeaea !important;
+}
