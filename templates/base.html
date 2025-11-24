@@ -8,7 +8,7 @@
   <title>{% block title %}Carnes del Rancho{% endblock %}</title>
 
   <!-- Favicons -->
-  <link rel="icon" href="{% static 'assets/img/favicon.png' %}" type="image/png" sizes="32x32">
+  <link rel="icon" href="{% static 'img/iconNav.png' %}">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -37,7 +37,7 @@
     <div class="container position-relative d-flex align-items-center justify-content-between">
 
       <a href="{% url 'home' %}#hero" class="logo d-flex align-items-center me-auto me-xl-0">
-        <img src="{% static 'assets/img/toro.png' %}" alt="Icono toro" style="height:40px;margin-right:10px;">
+        <img src="{% static 'img/toro.png' %}" alt="Icono toro" style="height:40px;margin-right:10px;">
         <h1 class="sitename m-0">Carnes del Rancho</h1>
       </a>
 
@@ -46,23 +46,6 @@
           <li><a href="{% url 'home' %}#hero">Inicio</a></li>
           <li><a href="{% url 'home' %}#about">Sobre Nosotros</a></li>
           <li><a href="{% url 'home' %}#menu">Catálogo de Productos</a></li>
-          <li class="dropdown">
-            <a href="#"><span>Ofertas del Rancho</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="#">Promociones de la Semana</a></li>
-              <li class="dropdown">
-                <a href="#"><span>Combos y Especiales</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                <ul>
-                  <li><a href="#">Combos para Restaurantes</a></li>
-                  <li><a href="#">Cortes Especiales</a></li>
-                  <li><a href="#">Huevos de Granja</a></li>
-                  <li><a href="#">Otros Productos</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Eventos</a></li>
-              <li><a href="#">Temporada</a></li>
-            </ul>
-          </li>
           <li><a href="{% url 'home' %}#contact">Contacto</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list" aria-label="Abrir menú"></i>
