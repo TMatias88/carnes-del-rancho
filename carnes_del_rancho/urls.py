@@ -6,7 +6,7 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     # Mantén SOLO un include del admin (conserva tu URL “segura”)
-    path("dashboard-securo-789/", admin.site.urls),
+    path("superadmin-12345/", admin.site.urls),
 
     # Redirige /admin/ hacia la ruta segura (no añade otro namespace)
     path("admin/", RedirectView.as_view(url="/dashboard-securo-789/", permanent=False)),
