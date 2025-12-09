@@ -256,11 +256,23 @@ h6 {
     padding-right: 0;
   }
 
-  .navmenu li:hover>a,
-  .navmenu .active,
-  .navmenu .active:focus {
-    color: var(--nav-hover-color);
-  }
+  /* === FIX PARA DESACTIVAR EL AMARILLO AUTOMÁTICO === */
+
+/* FIX PARA DESACTIVAR AMARILLO AUTOMÁTICO */
+.navmenu a.active,
+.navmenu a:focus,
+.navmenu li.active > a {
+  color: var(--nav-color) !important;
+  background-color: transparent !important;
+}
+
+/* Amarillo SOLO en hover */
+.navmenu a:hover {
+  color: var(--nav-hover-color) !important;
+}
+
+
+
 
   .navmenu .dropdown ul {
     margin: 0;
