@@ -3,6 +3,9 @@ from django.core.validators import MinValueValidator
 from django.urls import reverse
 from django.utils.text import slugify
 from catalog.utils.images import resolve_image
+from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
+
 
 
 class Category(models.Model):
@@ -41,7 +44,7 @@ class Product(models.Model):
     slug = models.SlugField("Slug", unique=True, blank=True)
     description = models.TextField("Descripción", blank=True)
 
-    # 🔥 Campo real para archivos locales
+    # Imagen local
     image_file = models.ImageField(
         "Imagen local (solo desarrollo)",
         upload_to="products/",
@@ -49,7 +52,7 @@ class Product(models.Model):
         null=True,
     )
 
-    # 🔥 Campo para RAW
+    # URL RAW
     image_url = models.URLField(
         "URL de imagen RAW (GitHub/DO)",
         max_length=500,
@@ -67,6 +70,17 @@ class Product(models.Model):
 
     created_at = models.DateTimeField("Creado", auto_now_add=True)
     updated_at = models.DateTimeField("Actualizado", auto_now=True)
+
+    # === VALIDACIÓN PARA BLOQUEAR NOMBRES SOLO NUMÉRICOS ===
+    def clean(self):
+        super().clean()
+
+        # Si el nombre es SOLO números → error
+        if self.name.isdigit():
+            raise ValidationError({
+                "name": "El nombre del producto no puede ser únicamente números."
+            })
+
 
     class Meta:
         verbose_name = "Producto"
