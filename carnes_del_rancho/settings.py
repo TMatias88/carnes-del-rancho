@@ -12,14 +12,26 @@ SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret")
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = [
+    # Render
     "carnes-del-rancho.onrender.com",
+
+    # Dominio propio
+    "carnesdelrancho.com",
+    "www.carnesdelrancho.com",
+
+    # Local development
     "localhost",
     "127.0.0.1",
 ]
 
 # === CSRF =================================================================================
 CSRF_TRUSTED_ORIGINS = [
+    # Render
     "https://carnes-del-rancho.onrender.com",
+
+    # Dominio propio
+    "https://carnesdelrancho.com",
+    "https://www.carnesdelrancho.com",
 ]
 
 _extra_csrf = os.getenv("CSRF_TRUSTED_ORIGINS", "")
@@ -86,7 +98,7 @@ TEMPLATES = [
 # === WSGI ==================================================================================
 WSGI_APPLICATION = "carnes_del_rancho.wsgi.application"
 
-# === DATABASE (Render) =====================================================================
+# === DATABASE (Render + Local) ==============================================================
 DATABASE_URL = os.getenv("DATABASE_URL", "")
 
 DATABASES = {}
@@ -94,7 +106,7 @@ if DATABASE_URL:
     DATABASES["default"] = dj_database_url.config(
         default=DATABASE_URL,
         conn_max_age=600,
-        ssl_require=False,     # Render NO usa SSL obligatorio
+        ssl_require=False,  # Render NO usa SSL obligatorio
     )
 else:
     DATABASES["default"] = {
@@ -121,7 +133,6 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
-
 
 # === MEDIA (local y Render – sin Spaces) =====================================================
 MEDIA_URL = "/media/"
